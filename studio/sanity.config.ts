@@ -13,8 +13,8 @@ const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
 const previewUrl = process.env.SANITY_STUDIO_PREVIEW_URL || 'http://localhost:4321'
 
 export default defineConfig({
-  name: 'sanity-template-astro-clean',
-  title: 'Sanity Astro Starter',
+  name: 'fcb-studio',
+  title: 'First Cherkasy Baptist',
   projectId,
   dataset,
   plugins: [

@@ -1,9 +1,6 @@
 {
-  "name": "sanity-template-astro-clean",
+  "name": "@fcb/source",
   "description": "Minimal Astro site with Sanity Studio",
-  "scripts": {
-    "dev": "concurrently \"npm run dev --workspace=frontend\" \"npm run dev --workspace=studio\""
-  },
   "keywords": [
     "Sanity",
     "Astro",
@@ -22,9 +19,6 @@
   ],
   "engines": {
     "node": ">=22.12.0"
-  },
-  "devDependencies": {
-    "concurrently": "^9.2.1"
   },
   "type": "module"
 }
