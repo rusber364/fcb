@@ -54,16 +54,10 @@ const visualEditingEnabled =
     </main>
 
     <Footer />
-
-    <script type="importmap" is:inline>
-      {
-        "imports": {
-          "swiper": "https://esm.sh/swiper@11",
-          "swiper/modules": "https://esm.sh/swiper@11/modules",
-          "lucide": "https://esm.sh/lucide@0.468.0"
-        }
-      }
-    </script>
-    <script src="/js/main.js" defer is:inline></script>
   </body>
 </html>
+
+<script>
+  import "../utils/initHeaderBehavior.mjs";
+  import "../utils/icon.mjs";
+</script>

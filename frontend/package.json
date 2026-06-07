@@ -29,6 +29,7 @@
     "sanity": "^5.26.0",
     "styled-components": "^6.4.2",
     "tailwindcss": "^4.3.0",
+    "lucide": "^1",
     "swiper": "^11"
   },
   "devDependencies": {
