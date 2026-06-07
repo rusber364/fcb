@@ -1,5 +1,7 @@
 ---
 import { VisualEditing } from "@sanity/astro/visual-editing";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
 interface Props {
   title: string;
@@ -45,57 +47,13 @@ const visualEditingEnabled =
   <body>
     <VisualEditing enabled={visualEditingEnabled} />
 
-    <header class="site-header">
-      <div class="site-header__inner">
-        <a class="site-header__logo" href="/" aria-label="Перша баптистська церква">
-          <img class="site-header__logo-icon" src="/img/logo.png" alt="" width="67" height="75" />
-          <span class="site-header__logo-text">Перша<br />баптистська<br />церква</span>
-        </a>
-
-        <nav class="site-header__nav" id="site-nav" aria-label="Основна навігація">
-          <a href="#news">Новини</a>
-          <a href="#about">Про церкву</a>
-          <a href="#ministries">Служіння</a>
-          <a href="#schedule">Розклад богослужінь</a>
-          <a href="#broadcast">Трансляції</a>
-          <a class="site-header__btn" href="#">Пожертви</a>
-        </nav>
-
-        <button class="menu-toggle--burger" type="button" aria-label="Відкрити меню" aria-controls="site-nav" aria-expanded="false">
-          <span class="hamburger" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-          <span class="cross" aria-hidden="true">
-            <span></span>
-            <span></span>
-          </span>
-        </button>
-      </div>
-    </header>
+    <Header />
 
     <main class="main">
       <slot />
     </main>
 
-    <footer class="site-footer" id="contacts">
-      <div class="container site-footer__bar">
-        <a class="site-footer__brand" href="/">
-          <img src="/img/logo-footer.png" alt="" width="47" height="53" />
-          <span>Перша Баптистська Церква м. Черкаси — християнська громада,<br />що служить Богу та людям з любов'ю, вірою і надією.</span>
-        </a>
-        <div class="site-footer__socials" aria-label="Соціальні мережі">
-          <a href="#" aria-label="Facebook"><img src="/img/soc1.png" alt="" width="17" height="32" /></a>
-          <a href="#" aria-label="Instagram"><img src="/img/soc2.png" alt="" width="32" height="32" /></a>
-          <a href="#" aria-label="YouTube"><img src="/img/soc3.png" alt="" width="43" height="32" /></a>
-        </div>
-      </div>
-      <div class="container site-footer__meta">
-        <p>© 2026 baptist.ck.ua</p>
-        <p>Зроблено з <img src="/img/heart.png" alt="" width="28" height="25" /> любов'ю до ближнього</p>
-      </div>
-    </footer>
+    <Footer />
 
     <script type="importmap" is:inline>
       {

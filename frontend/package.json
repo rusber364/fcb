@@ -28,7 +28,8 @@
     "react-is": "^19.2.6",
     "sanity": "^5.26.0",
     "styled-components": "^6.4.2",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "^4.3.0",
+    "swiper": "^11"
   },
   "devDependencies": {
     "@portabletext/types": "^4.0.2",

@@ -1,5 +1,10 @@
 ---
+import News from "../components/News.astro";
+import Hero from "../components/Hero.astro";
 import Layout from "../layouts/Layout.astro";
+import Donate from "../components/Donate.astro";
+import About from "../components/About.astro";
+import Ministries from "../components/Ministries.astro";
 ---
 
 <Layout
@@ -7,166 +12,9 @@ import Layout from "../layouts/Layout.astro";
   description="Перша баптистська церква: новини, служіння, розклад богослужінь, трансляції та пожертви."
 >
   <h1 class="visually-hidden">Перша баптистська церква</h1>
-
-  <section class="hero" aria-label="Головні події церкви">
-    <div class="hero__slider swiper">
-      <div class="swiper-wrapper">
-        <div class="hero__slide swiper-slide">
-          <img src="img/YOUTUBE.png" alt="" width="1983" height="793">
-        </div>
-        <div class="hero__slide swiper-slide">
-          <video class="hero__video" data-hero-video data-src="img/video-slider.mp4" src="img/video-slider.mp4" poster="img/slide.png" width="1200" height="698" muted loop playsinline webkit-playsinline preload="metadata" aria-label="Відео церкви"></video>
-        </div>
-        <div class="hero__slide swiper-slide">
-          <img src="img/slide.png" alt="" width="1200" height="698">
-        </div>
-        <div class="hero__slide swiper-slide">
-          <img src="img/slide.png" alt="" width="1200" height="698">
-        </div>
-        <div class="hero__slide swiper-slide">
-          <img src="img/slide.png" alt="" width="1200" height="698">
-        </div>
-      </div>
-
-      <button class="hero__arrow hero__arrow_prev" type="button" aria-label="Попередній слайд">
-        <img src="/img/arrow-left.png" alt="" width="25" height="45" />
-      </button>
-      <button class="hero__arrow hero__arrow_next" type="button" aria-label="Наступний слайд">
-        <img src="/img/arrow-right.png" alt="" width="25" height="45" />
-      </button>
-      <div class="hero__pagination"></div>
-    </div>
-  </section>
-
-  <section class="intro" id="about">
-    <div class="container intro__grid">
-      <article class="welcome-card">
-        <div>
-          <div class="welcome-card__title">Тут твоя<br />Церква</div>
-          <p>Місце, де тебе готові зустріти, обійняти і підтримати.</p>
-          <a class="btn btn_light" href="#about">Дізнатися більше <img src="/img/arrow-btn.png" alt="" width="12" height="11" /></a>
-        </div>
-        <img src="/img/logo-bem.png" alt="" width="246" height="278" />
-      </article>
-
-      <article class="service-card" id="schedule">
-        <div class="service-card__title">Богослужіння</div>
-        <p>Запрошуємо тебе на спільну молитву, поклоніння та читання Слова. Ми раді кожному гостю та завжди відкриті для нових людей.</p>
-        <div class="service-card__time">
-          <i data-lucide="calendar-days" aria-hidden="true"></i>
-          <span>Щонеділі об 11:00</span>
-        </div>
-        <div class="service-card__place">
-          <span>м. Черкаси</span>
-          <span>вул. Лісова Просіка 32</span>
-        </div>
-        <a class="btn btn_primary service-card__btn" href="#contacts">Як нас знайти <i data-lucide="map-pin" aria-hidden="true"></i></a>
-      </article>
-    </div>
-  </section>
-
-  <section class="features" id="ministries">
-    <div class="container features__slider swiper">
-      <div class="features__grid swiper-wrapper">
-        <article class="feature-card swiper-slide">
-          <div class="feature-card__icon"><i data-lucide="users" aria-hidden="true"></i></div>
-          <div class="feature-card__title">Спільнота</div>
-          <p>Разом ми зростаємо у вірі та підтримуємо один одного.</p>
-          <a href="#about" aria-label="Детальніше про спільноту"><i data-lucide="arrow-right" aria-hidden="true"></i></a>
-        </article>
-        <article class="feature-card swiper-slide">
-          <div class="feature-card__icon"><i data-lucide="heart-handshake" aria-hidden="true"></i></div>
-          <div class="feature-card__title">Служимо з любов'ю</div>
-          <p>Допомагаємо людям, ділимося добром і Божою надією.</p>
-          <a href="#about" aria-label="Детальніше про служіння"><i data-lucide="arrow-right" aria-hidden="true"></i></a>
-        </article>
-        <article class="feature-card swiper-slide">
-          <div class="feature-card__icon"><i data-lucide="music-2" aria-hidden="true"></i></div>
-          <div class="feature-card__title">Прославляємо разом</div>
-          <p>Музика та спів, що торкаються серця та наближають до Бога.</p>
-          <a href="#about" aria-label="Детальніше про прославлення"><i data-lucide="arrow-right" aria-hidden="true"></i></a>
-        </article>
-        <article class="feature-card swiper-slide">
-          <div class="feature-card__icon"><i data-lucide="book-open" aria-hidden="true"></i></div>
-          <div class="feature-card__title">Пізнаємо Бога разом</div>
-          <p>Біблійні навчання та групи для всіх вікових категорій.</p>
-          <a href="#about" aria-label="Детальніше про навчання"><i data-lucide="arrow-right" aria-hidden="true"></i></a>
-        </article>
-        <article class="feature-card swiper-slide">
-          <div class="feature-card__icon"><i data-lucide="calendar" aria-hidden="true"></i></div>
-          <div class="feature-card__title">Події для кожного</div>
-          <p>Богослужіння, зустрічі, навчання, молитва і спілкування.</p>
-          <a href="#about" aria-label="Детальніше про події"><i data-lucide="arrow-right" aria-hidden="true"></i></a>
-        </article>
-      </div>
-      <button class="mobile-slider-arrow mobile-slider-arrow_prev features__arrow_prev" type="button" aria-label="Попередня картка"><img src="/img/arrow-left.png" alt="" width="25" height="45" /></button>
-      <button class="mobile-slider-arrow mobile-slider-arrow_next features__arrow_next" type="button" aria-label="Наступна картка"><img src="/img/arrow-right.png" alt="" width="25" height="45" /></button>
-    </div>
-  </section>
-
-  <section class="news" id="news">
-    <div class="container news__panel">
-      <div class="section-head">
-        <div class="section-head__title">Новини</div>
-        <a class="section-head__link" href="#news">Усі новини <img src="/img/arrow-read.png" alt="" width="22" height="18" /></a>
-      </div>
-
-      <div class="news__slider swiper">
-        <div class="news__grid swiper-wrapper">
-          <a class="news-card swiper-slide" href="#">
-            <div class="news-card__image" style="background-image: url('/img/img1.png');" aria-hidden="true"></div>
-            <time datetime="2026-05-19">19 травня 2026</time>
-            <div class="news-card__title">День народження нашої Церкви</div>
-            <p>Цієї неділі ми разом святкували День народження нашої Церкви. Дякуємо Богу за Його вірність!</p>
-            <span class="news-card__link">Читати далі <img src="/img/arrow-read.png" alt="" width="22" height="18" /></span>
-          </a>
-          <a class="news-card swiper-slide" href="#">
-            <div class="news-card__image" style="background-image: url('/img/img2.png');" aria-hidden="true"></div>
-            <time datetime="2026-05-19">19 травня 2026</time>
-            <div class="news-card__title">День народження нашої Церкви</div>
-            <p>Цієї неділі ми разом святкували День народження нашої Церкви. Дякуємо Богу за Його вірність!</p>
-            <span class="news-card__link">Читати далі <img src="/img/arrow-read.png" alt="" width="22" height="18" /></span>
-          </a>
-          <a class="news-card swiper-slide" href="#">
-            <div class="news-card__image" style="background-image: url('/img/img3.png');" aria-hidden="true"></div>
-            <time datetime="2026-05-19">19 травня 2026</time>
-            <div class="news-card__title">День народження нашої Церкви</div>
-            <p>Цієї неділі ми разом святкували День народження нашої Церкви. Дякуємо Богу за Його вірність!</p>
-            <span class="news-card__link">Читати далі <img src="/img/arrow-read.png" alt="" width="22" height="18" /></span>
-          </a>
-        </div>
-        <button class="mobile-slider-arrow mobile-slider-arrow_prev news__arrow_prev" type="button" aria-label="Попередня новина"><img src="/img/arrow-left.png" alt="" width="25" height="45" /></button>
-        <button class="mobile-slider-arrow mobile-slider-arrow_next news__arrow_next" type="button" aria-label="Наступна новина"><img src="/img/arrow-right.png" alt="" width="25" height="45" /></button>
-      </div>
-    </div>
-  </section>
-
-  <section class="cta" id="donate">
-    <div class="container cta__grid">
-      <article class="cta-card">
-        <div class="cta-card__head">
-          <img class="cta-card__icon" src="/img/cta-card-1.png" alt="" width="68" height="67" />
-          <div class="cta-card__title">Для кого ця Церква?</div>
-        </div>
-        <span class="cta-card__lead">Для кожного</span>
-        <p>Для сімей, молоді, дітей, людей старшого віку, тих, хто давно у вірі або тільки шукає Бога. Тут є місце для тебе.</p>
-      </article>
-      <article class="cta-card">
-        <div class="cta-card__head">
-          <img class="cta-card__icon" src="/img/cta-card-2.png" alt="" width="71" height="63" />
-          <div class="cta-card__title">Приєднуйся</div>
-        </div>
-        <span class="cta-card__lead">Ми будемо раді знайомству</span>
-        <p>Приходь на богослужіння, домашні групи або зустрічі - і стань частиною дружньої християнської спільноти.</p>
-      </article>
-      <article class="cta-card">
-        <div class="cta-card__head">
-          <img class="cta-card__icon" src="/img/cta-card-3.png" alt="" width="60" height="66" />
-          <div class="cta-card__title">Підтримай служіння</div>
-        </div>
-        <p>Твоя підтримка допомагає нам служити людям і поширювати Євангеліє.</p>
-        <a class="btn btn_primary cta-card__btn" href="#donate">Пожертвувати</a>
-      </article>
-    </div>
-  </section>
+  <Hero />
+  <About />
+  <Ministries />
+  <News />
+  <Donate />
 </Layout>
