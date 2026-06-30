@@ -141,12 +141,6 @@ svg {
     max-width: 100%;
 }
 
-.container {
-    width: calc(100vw - 40px);
-    max-width: 1200px;
-    width: min(100vw - 40px, 1200px);
-    margin: 0 auto;
-}
 
 .visually-hidden {
     position: absolute;
@@ -646,11 +640,6 @@ svg {
 }
 
 @media (max-width: 1199px) {
-    .container {
-        width: calc(100% - 32px);
-        max-width: 1200px;
-    }
-
     .hero__arrow {
         opacity: 1;
         pointer-events: auto;
@@ -700,11 +689,6 @@ svg {
 }
 
 @media (max-width: 991px) {
-    .container {
-        width: calc(100% - 28px);
-        max-width: 1200px;
-    }
-
     .main {
         padding-top: 18px;
     }
@@ -760,10 +744,6 @@ svg {
 }
 
 @media (max-width: 767px) {
-    .container {
-        width: calc(100% - 28px);
-    }
-
     .section-head {
         align-items: flex-start;
         flex-direction: column;
@@ -824,10 +804,6 @@ svg {
 @media (max-width: 575px) {
     body {
         font-size: 15px;
-    }
-
-    .container {
-        width: calc(100% - 24px);
     }
 
     .hero {
@@ -914,10 +890,6 @@ svg {
 }
 
 @media (max-width: 420px) {
-    .container {
-        width: calc(100% - 20px);
-    }
-
     .welcome-card,
     .service-card,
     .feature-card,
