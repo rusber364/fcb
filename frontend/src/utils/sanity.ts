@@ -71,6 +71,36 @@ export interface Seo {
   ogImage?: SanityImage;
 }
 
+export async function getEvents(): Promise<Event[]> {
+  return loadQuery<Event[]>(
+    groq`*[_type == "event"] | order(date asc) {
+      _id,
+      _type,
+      title,
+      slug,
+      date,
+      endDate,
+      time,
+      location,
+      category,
+      description,
+    }`,
+  );
+}
+
+export interface Event {
+  _id: string;
+  _type: "event";
+  title: string;
+  slug: Slug;
+  date: string;
+  endDate?: string;
+  time?: string;
+  location?: string;
+  category?: "sunday" | "youth" | "other";
+  description?: string;
+}
+
 export interface Post {
   _id: string;
   _type: "post";

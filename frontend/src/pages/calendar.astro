@@ -1,0 +1,98 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getEvents } from "../utils/sanity";
+
+const events = await getEvents();
+const months = [
+  "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень",
+  "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень",
+];
+const today = new Date();
+const currentYear = today.getFullYear();
+const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
+---
+
+<Layout title="Календар подій">
+  <div class="container calendar-page">
+    <div class="calendar-page__top">
+      <div class="calendar-page__brand" aria-label="Перша баптистська церква">
+        <img src="/img/logo.png" alt="" width="67" height="75" />
+        <span>Перша<br />баптистська<br />церква</span>
+      </div>
+      <h1 class="calendar-page__heading">Календар подій</h1>
+    </div>
+
+    <div class="calendar-header">
+      <h2 class="calendar-header__title" id="calendar-title"></h2>
+      <div class="calendar-header__controls">
+        <button class="calendar-header__btn" data-calendar-nav="-1" aria-label="Попередній місяць">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="calendar-header__selects">
+          <label class="calendar-select-field">
+            <span>Рік</span>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <select id="calendar-year-select" class="calendar-header__select">
+              {years.map((y) => (
+                <option value={y} selected={y === currentYear}>{y}</option>
+              ))}
+            </select>
+          </label>
+          <label class="calendar-select-field calendar-select-field_month">
+            <span>Місяць</span>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <select id="calendar-month-select" class="calendar-header__select">
+              {months.map((m, i) => (
+                <option value={i} selected={i === today.getMonth()}>{m}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <button class="calendar-header__btn" data-calendar-nav="1" aria-label="Наступний місяць">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="calendar-grid" id="calendar-grid" data-events={JSON.stringify(events)}>
+      <div class="calendar-grid__weekdays"></div>
+      <div class="calendar-grid__days"></div>
+    </div>
+
+    <aside class="calendar-info-bar" aria-label="Інформація про календар подій">
+      <div class="calendar-info-bar__item">
+        <span class="calendar-info-bar__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>
+        <span><strong>Актуальний розклад подій</strong><small>Плануйте участь та запрошуйте друзів</small></span>
+      </div>
+      <div class="calendar-info-bar__item">
+        <span class="calendar-info-bar__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-8 0v2"></path><circle cx="12" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+        <span><strong>Будуємо спільноту</strong><small>Разом у вірі та служінні</small></span>
+      </div>
+      <div class="calendar-info-bar__item">
+        <span class="calendar-info-bar__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"></path></svg></span>
+        <span><strong>Молимося. Служимо. Любимо.</strong><small>Для слави Божої та добра людей</small></span>
+      </div>
+      <div class="calendar-info-bar__item calendar-info-bar__item_socials">
+        <span class="calendar-info-bar__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"></path></svg></span>
+        <strong>baptist.ck.ua</strong>
+        <span class="calendar-info-bar__socials">
+          <img src="/img/soc1.png" alt="Facebook" width="17" height="32" />
+          <img src="/img/soc2.png" alt="Instagram" width="32" height="32" />
+          <img src="/img/soc3.png" alt="YouTube" width="43" height="32" />
+        </span>
+      </div>
+    </aside>
+  </div>
+</Layout>
+
+<script>
+  import { initCalendar } from "../utils/calendar.mjs";
+
+  const container = document.getElementById("calendar-grid")!;
+  const titleEl = document.getElementById("calendar-title")!;
+  const monthSelect = document.getElementById("calendar-month-select")!;
+  const yearSelect = document.getElementById("calendar-year-select")!;
+  const events = JSON.parse(container.dataset.events!);
+
+  initCalendar(container, titleEl, monthSelect, yearSelect, events);
+</script>
