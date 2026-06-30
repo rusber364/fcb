@@ -14,7 +14,7 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
 ---
 
 <Layout title="Календар подій">
-  <div class="container font-['Roboto,_Arial,_sans-serif'] pt-7 pb-20 max-md:pt-4">
+  <div class="container font-serif pt-7 pb-20 max-md:pt-4">
     <CalendarPageHeader />
     <CalendarControls months={MONTHS_UK} years={years} currentYear={currentYear} currentMonth={today.getMonth()} />
     <CalendarGrid events={events} />
