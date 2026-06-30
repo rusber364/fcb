@@ -1,4 +1,4 @@
-const MONTHS_UK = [
+export const MONTHS_UK = [
   "Січень",
   "Лютий",
   "Березень",
