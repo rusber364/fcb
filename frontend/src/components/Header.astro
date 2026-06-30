@@ -28,3 +28,402 @@
     </button>
   </div>
 </header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+    height: 100px;
+    padding: 0 20px;
+  }
+
+  .site-header__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    height: 122px;
+    margin: 0 auto;
+    padding: 0 36px;
+    border-radius: 36px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .72) 0%, rgba(245, 245, 245, .58) 100%);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    transform: translateZ(0);
+    transition: max-width .32s ease, height .32s ease, padding .32s ease, border-radius .32s ease, box-shadow .32s ease;
+    will-change: max-width, height;
+  }
+
+  .site-header__logo {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    margin-right: auto;
+    color: #111;
+  }
+
+  .site-header__logo-icon {
+    flex: 0 0 auto;
+    transition: width .32s ease, height .32s ease;
+  }
+
+  .site-header__logo-text {
+    overflow: hidden;
+    max-width: 160px;
+    font: 700 15px / 1.46 'Gilroy', Arial, sans-serif;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transform: translateY(9px);
+    transition: opacity .22s ease, max-width .32s ease, transform .32s ease;
+  }
+
+  .site-header__nav {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .site-header__nav a {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #050505;
+  }
+
+  .site-header__nav a:hover {
+    color: var(--accent);
+  }
+
+  .site-header__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 43px;
+    padding: 0 22px;
+    margin-left: 15px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    box-shadow: none;
+    transition: box-shadow .3s ease;
+  }
+
+  .site-header__nav .site-header__btn {
+    color: #fff;
+  }
+
+  .site-header__nav .site-header__btn:hover,
+  .site-header__btn:hover {
+    color: #fff;
+    box-shadow: 0 16px 26px rgba(255, 61, 31, .3);
+  }
+
+  .site-header.is-scrolled .site-header__inner {
+    max-width: 1140px;
+    height: 78px;
+    padding: 0 20px;
+    border-radius: 28px;
+  }
+
+  .site-header.is-scrolled .site-header__logo-icon {
+    width: 46px;
+    height: 52px;
+  }
+
+  .site-header.is-scrolled .site-header__logo-text {
+    max-width: 0;
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  .menu-toggle--burger {
+    position: relative;
+    z-index: 4;
+    display: none;
+    width: 32px;
+    height: 32px;
+    padding: 1px 0 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .menu-toggle--burger * {
+    transition: .25s ease-in-out;
+  }
+
+  .menu-toggle--burger span {
+    display: block;
+    background: #252525;
+  }
+
+  .menu-toggle--burger .hamburger,
+  .menu-toggle--burger .cross {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+
+  .menu-toggle--burger .hamburger span {
+    position: relative;
+    width: 32px;
+    height: 2px;
+    margin: 6px 0;
+  }
+
+  .menu-toggle--burger .hamburger span:first-child {
+    transition-delay: .5s;
+  }
+
+  .menu-toggle--burger .hamburger span:nth-child(2) {
+    transition-delay: 625ms;
+  }
+
+  .menu-toggle--burger .hamburger span:nth-child(3) {
+    transition-delay: .75s;
+  }
+
+  .menu-toggle--burger .cross {
+    transform: rotate(45deg);
+  }
+
+  .menu-toggle--burger .cross span:first-child {
+    position: absolute;
+    top: 5%;
+    left: 15px;
+    width: 2px;
+    height: 0%;
+    transition-delay: 0s;
+  }
+
+  .menu-toggle--burger .cross span:nth-child(2) {
+    position: absolute;
+    top: 15px;
+    left: 5%;
+    width: 0;
+    height: 2px;
+    transition-delay: .25s;
+  }
+
+  .menu-toggle--burger.toggled .hamburger span {
+    width: 0;
+  }
+
+  .menu-toggle--burger.toggled .hamburger span:first-child {
+    transition-delay: 0s;
+  }
+
+  .menu-toggle--burger.toggled .hamburger span:nth-child(2) {
+    transition-delay: 125ms;
+  }
+
+  .menu-toggle--burger.toggled .hamburger span:nth-child(3) {
+    transition-delay: .25s;
+  }
+
+  .menu-toggle--burger.toggled .cross span:first-child {
+    height: 90%;
+    transition-delay: 625ms;
+  }
+
+  .menu-toggle--burger.toggled .cross span:nth-child(2) {
+    width: 90%;
+    transition-delay: 375ms;
+  }
+
+  @media (max-width: 1199px) {
+    .site-header {
+      padding: 0 16px;
+    }
+
+    .site-header__inner {
+      padding: 0 28px;
+    }
+
+    .site-header__nav {
+      gap: 16px;
+    }
+
+    .site-header__nav a,
+    .site-header__btn {
+      font-size: 15px;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .site-header {
+      top: 14px;
+      height: 74px;
+      padding: 0 10px;
+    }
+
+    .site-header__inner,
+    .site-header.is-scrolled .site-header__inner {
+      height: 74px;
+      padding: 0 18px;
+      border-radius: 24px;
+    }
+
+    .site-header__logo-text,
+    .site-header.is-scrolled .site-header__logo-text {
+      width: auto;
+      max-width: 160px;
+      opacity: 1;
+      transform: none;
+      font-size: 12px;
+    }
+
+    .site-header__nav {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 118px 20px 36px;
+      background: #fff;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-20px);
+      transition: opacity .3s ease, visibility .3s ease, transform .3s ease;
+    }
+
+    .site-header__nav.is-active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .site-header__nav a:not(.site-header__btn) {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+      font-size: 26px;
+      color: #111;
+      text-align: center;
+    }
+
+    .site-header__btn {
+      width: 100%;
+      max-width: 420px;
+      height: 50px;
+      margin: 10px auto 0;
+      font-size: 18px;
+    }
+
+    .site-header__logo-icon {
+      width: 46px;
+      height: 52px;
+    }
+
+    .menu-toggle--burger {
+      z-index: 4;
+      display: block;
+      flex-shrink: 0;
+      margin-left: auto;
+      align-self: center;
+      margin-top: 0;
+      padding: 0;
+    }
+
+    .menu-toggle--burger .hamburger {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .site-header__logo-text,
+    .site-header.is-scrolled .site-header__logo-text {
+      font-size: 11px;
+    }
+  }
+
+  @media (max-width: 575px) {
+    .site-header {
+      top: 10px;
+      height: 70px;
+      padding: 0 8px;
+    }
+
+    .site-header__inner,
+    .site-header.is-scrolled .site-header__inner {
+      height: 70px;
+      padding: 0 14px;
+      border-radius: 22px;
+    }
+
+    .site-header__logo {
+      gap: 9px;
+    }
+
+    .site-header__logo-text,
+    .site-header.is-scrolled .site-header__logo-text {
+      max-width: 118px;
+      font-size: 10px;
+      line-height: 1.36;
+    }
+
+    .site-header__nav {
+      gap: 20px;
+      padding: 108px 16px 30px;
+    }
+
+    .site-header__nav a:not(.site-header__btn) {
+      font-size: 23px;
+    }
+
+    .site-header__btn {
+      height: 48px;
+      font-size: 17px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .site-header__logo-text,
+    .site-header.is-scrolled .site-header__logo-text {
+      max-width: 96px;
+      font-size: 9px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .site-header__inner,
+    .site-header.is-scrolled .site-header__inner {
+      padding: 0 12px;
+    }
+
+    .site-header__nav a:not(.site-header__btn) {
+      font-size: 21px;
+    }
+
+    .site-header__logo-text,
+    .site-header.is-scrolled .site-header__logo-text {
+      display: block;
+      max-width: 96px;
+      opacity: 1;
+    }
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .site-header__inner {
+      background: linear-gradient(180deg, rgba(255, 255, 255, .94) 0%, rgba(245, 245, 245, .9) 100%);
+    }
+  }
+</style>
