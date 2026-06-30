@@ -13,6 +13,9 @@
     "url": "https://github.com/sanity-io/sanity-template-astro-clean/issues"
   },
   "homepage": "https://github.com/sanity-io/sanity-template-astro-clean#readme",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @fcb/studio --filter @fcb/app dev"
+  },
   "workspaces": [
     "studio",
     "frontend"
