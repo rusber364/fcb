@@ -562,8 +562,7 @@ svg {
 
 .welcome-card,
 .service-card,
-.feature-card,
-.cta-card {
+.feature-card {
     border: 1px solid var(--line);
     border-radius: 22px;
     background: #fff;
@@ -610,8 +609,7 @@ svg {
 }
 
 .service-card__title,
-.section-head__title,
-.cta-card__title {
+.section-head__title {
     margin: 0;
     font-size: 28px;
     font-weight: 800;
@@ -861,90 +859,6 @@ svg {
     color: #3a3a3a;
 }
 
-.cta {
-    padding: 0 0 42px;
-}
-
-.cta__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 376px);
-    justify-content: space-between;
-    gap: 36px;
-}
-
-.cta-card {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    height: 257px;
-    min-height: 0;
-    padding: 28px 32px 29px;
-    overflow: hidden;
-    border: 0;
-    border-radius: 18px;
-    background: #c8f1e7 url('../img/bg-cta-card.png') center / cover no-repeat;
-    box-shadow: none;
-}
-
-.cta-card__head {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    min-height: 74px;
-    margin-bottom: 22px;
-}
-
-.cta-card__icon {
-    flex: 0 0 auto;
-}
-
-.cta-card__title {
-    max-width: 205px;
-    margin: 0;
-    font-size: 28px;
-    font-weight: 800;
-    line-height: 1.18;
-    color: #454b4d;
-}
-
-.cta-card__lead {
-    display: block;
-    margin: 0 0 16px;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 1.25;
-    color: #111;
-}
-
-.cta-card p {
-    max-width: 310px;
-    margin: 0;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.27;
-    color: #303a3d;
-}
-
-.cta-card__btn {
-    box-sizing: border-box;
-    width: 167px;
-    min-width: 0;
-    min-height: 44px;
-    margin: 15px 0 0 62px;
-    padding: 0 22px;
-    border-radius: 8px;
-    background: linear-gradient(180deg, #42BB86 0%, #17A8A0 100%);
-    font-size: 15px;
-    font-weight: 700;
-    text-transform: uppercase;
-    box-shadow: none;
-    transition: box-shadow .3s ease;
-}
-
-.cta-card__btn:hover {
-    box-shadow: 0 16px 26px rgba(23, 168, 160, .26);
-}
-
 @media (max-width: 1199px) {
     .container {
         width: calc(100% - 32px);
@@ -998,8 +912,7 @@ svg {
         min-height: 385px;
     }
 
-    .news__grid,
-    .cta__grid {
+    .news__grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 28px;
     }
@@ -1015,10 +928,6 @@ svg {
         max-width: none;
     }
 
-    .cta-card {
-        height: auto;
-        min-height: 257px;
-    }
 }
 
 @media (max-width: 991px) {
@@ -1146,16 +1055,10 @@ svg {
         padding: 28px;
     }
 
-    .news__grid,
-    .cta__grid {
+    .news__grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         justify-content: stretch;
         gap: 28px;
-    }
-
-    .cta-card {
-        width: 100%;
-        max-width: none;
     }
 
 }
@@ -1212,8 +1115,7 @@ svg {
     }
 
     .features__grid,
-    .news__grid,
-    .cta__grid {
+    .news__grid {
         grid-template-columns: 1fr;
     }
 
@@ -1224,10 +1126,6 @@ svg {
 
     .news-card__image {
         max-width: none;
-    }
-
-    .cta-card {
-        min-height: 0;
     }
 
 }
@@ -1304,22 +1202,19 @@ svg {
 
     .intro,
     .features,
-    .news,
-    .cta {
+    .news {
         padding-bottom: 30px;
     }
 
     .welcome-card,
     .service-card,
-    .feature-card,
-    .cta-card {
+    .feature-card {
         border-radius: 18px;
     }
 
     .welcome-card,
     .service-card,
-    .feature-card,
-    .cta-card {
+    .feature-card {
         padding: 24px;
     }
 
@@ -1327,8 +1222,7 @@ svg {
         font-size: 42px;
     }
 
-    .service-card__title,
-    .cta-card__title {
+    .service-card__title {
         font-size: 25px;
     }
 
@@ -1364,14 +1258,6 @@ svg {
         font-size: 24px;
     }
 
-    .cta-card__head {
-        gap: 14px;
-    }
-
-    .cta-card__btn {
-        margin-left: 0;
-    }
-
 }
 
 @media (max-width: 420px) {
@@ -1388,8 +1274,7 @@ svg {
     .welcome-card,
     .service-card,
     .feature-card,
-    .news__panel,
-    .cta-card {
+    .news__panel {
         padding: 20px;
     }
 
@@ -1418,16 +1303,6 @@ svg {
         height: 42px;
     }
 
-    .cta-card__head {
-        align-items: flex-start;
-        flex-direction: column;
-        min-height: 0;
-    }
-
-    .cta-card__title {
-        max-width: none;
-    }
-
 }
 
 @media (max-width: 360px) {
@@ -1449,8 +1324,7 @@ svg {
     }
 
     .feature-card__title,
-    .service-card__title,
-    .cta-card__title {
+    .service-card__title {
         font-size: 23px;
     }
 }
