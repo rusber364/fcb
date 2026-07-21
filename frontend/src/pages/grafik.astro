@@ -11,14 +11,6 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
 
 <Layout title="Графік проповідників">
   <div class="container font-serif pt-7 pb-20 max-md:pt-4">
-    <div class="preachers-page-top">
-      <div class="calendar-brand" aria-label="Перша баптистська церква">
-        <img src="/img/logo.png" alt="" width="67" height="75" />
-        <span>Перша<br />баптистська<br />церква</span>
-      </div>
-      <h1>Графік проповідників</h1>
-    </div>
-
     <div class="preachers-header">
       <h2 id="preachers-title"></h2>
       <div class="preachers-controls">
@@ -61,43 +53,6 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
 </Layout>
 
 <style is:global>
-  .preachers-page-top {
-    display: flex;
-    align-items: center;
-    gap: 52px;
-    margin-bottom: 52px;
-  }
-
-  .preachers-page-top .calendar-brand {
-    display: flex;
-    align-items: center;
-    flex: 0 0 auto;
-    gap: 18px;
-    color: #111;
-  }
-
-  .preachers-page-top .calendar-brand img {
-    width: 76px;
-    height: auto;
-  }
-
-  .preachers-page-top .calendar-brand span {
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1.28;
-    text-transform: uppercase;
-  }
-
-  .preachers-page-top h1 {
-    margin: 0;
-    color: #101114;
-    font-size: clamp(34px, 5vw, 56px);
-    font-weight: 500;
-    line-height: .95;
-    letter-spacing: -.04em;
-    text-transform: uppercase;
-  }
-
   .preachers-header {
     display: flex;
     align-items: center;
@@ -205,6 +160,7 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
     background: #fff;
     box-shadow: 0 14px 45px rgba(20, 38, 35, .045);
     overflow-x: auto;
+    min-height: 400px;
   }
 
   .preachers-table {
@@ -213,6 +169,8 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
     border-spacing: 0;
     font-size: 13px;
     min-width: 720px;
+    opacity: 1;
+    transition: opacity .12s ease;
   }
 
   .preachers-table thead th {
@@ -234,17 +192,27 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
     position: sticky;
     left: 0;
     z-index: 3;
+    width: 180px;
+    min-width: 180px;
     text-align: left;
     padding-left: 12px;
-    min-width: 180px;
   }
 
-  .preachers-table thead th:nth-child(2) {
-    border-left: 2px solid #e8edf0;
+  .preachers-table thead th:not(:first-child) {
+    width: 48px;
+    min-width: 48px;
+  }
+
+  .preachers-table thead th {
+    border-right: 1px solid #f0f2f4;
   }
 
   .preachers-table thead th:last-child {
     border-right: none;
+  }
+
+  .preachers-table thead th:nth-child(2) {
+    border-left: 2px solid #e8edf0;
   }
 
   .preachers-table thead .th--sunday {
@@ -273,6 +241,7 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
 
   .preachers-table tbody td {
     padding: 10px 6px;
+    border-right: 1px solid #f0f2f4;
     text-align: center;
     color: #10152d;
     font-size: 14px;
@@ -280,17 +249,27 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
     white-space: nowrap;
   }
 
+  .preachers-table tbody td:last-child {
+    border-right: none;
+  }
+
   .preachers-table tbody td:first-child {
     position: sticky;
     left: 0;
     z-index: 1;
+    width: 180px;
+    min-width: 180px;
     background: #fff;
     text-align: left;
     padding-left: 12px;
     font-size: 14px;
     font-weight: 500;
     color: #10152d;
-    min-width: 180px;
+  }
+
+  .preachers-table tbody td:not(:first-child) {
+    width: 48px;
+    min-width: 48px;
   }
 
   .preachers-table tbody td:first-child::after {
@@ -341,19 +320,23 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
     background: #fafff8;
   }
 
-  @media (max-width: 1024px) {
-    .preachers-page-top {
-      gap: 28px;
-      margin-bottom: 38px;
-    }
+  .preachers-table tbody tr.row--hover td {
+    background: #f7fbf9;
+  }
+
+  .preachers-table tbody td.col--hover {
+    background: #f8fbfc;
+  }
+
+  .preachers-table tbody tr.row--hover td.col--hover {
+    background: #f0f7f4;
+  }
+
+  .preachers-table thead th.col--hover {
+    background: #f5f8f9;
   }
 
   @media (max-width: 768px) {
-    .preachers-page-top {
-      align-items: flex-start;
-      flex-direction: column;
-    }
-
     .preachers-header {
       align-items: flex-start;
       flex-direction: column;
@@ -385,14 +368,6 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
   }
 
   @media (max-width: 480px) {
-    .preachers-page-top .calendar-brand img {
-      width: 60px;
-    }
-
-    .preachers-page-top .calendar-brand span {
-      font-size: 14px;
-    }
-
     .preachers-nav-btn {
       width: 40px;
       height: 40px;
@@ -401,158 +376,12 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
 </style>
 
 <script>
-  import { sanityClient } from "sanity:client";
-  import { MONTHS_UK } from "../utils/calendar.mjs";
+  import { initPreacherSchedule } from "../utils/preacherSchedule.mjs";
 
-  const wrap = document.getElementById("preachers-table-wrap");
-  const table = wrap.querySelector(".preachers-table");
-  const thead = table.querySelector("thead");
-  const tbody = table.querySelector("tbody");
-  const titleEl = document.getElementById("preachers-title");
-  const monthSelect = document.getElementById("preachers-month-select");
-  const yearSelect = document.getElementById("preachers-year-select");
-
-  const DAY_NAMES = ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
-  const PREACHING_DAYS = [0, 3, 5, 6];
-
-  function getMonthDays(year, month) {
-    return new Date(year, month + 1, 0).getDate();
-  }
-
-  function isPreachingDay(year, month, day) {
-    return PREACHING_DAYS.includes(new Date(year, month, day).getDay());
-  }
-
-  function formatDateKey(year, month, day) {
-    const m = String(month + 1).padStart(2, "0");
-    const d = String(day).padStart(2, "0");
-    return `${year}-${m}-${d}`;
-  }
-
-  function getScheduleKey(year, month, day, preacherId) {
-    return `${formatDateKey(year, month, day)}_${preacherId}`;
-  }
-
-  async function loadSchedule(month, year) {
-    const data = await sanityClient.fetch(
-      `*[_type == "monthlySchedule" && month == $month && year == $year][0]{
-        _id,
-        assignments[] {
-          _key,
-          day,
-          slot,
-          preacher->{_id, name}
-        }
-      }`,
-      { month: month + 1, year }
-    );
-    return data || null;
-  }
-
-  function buildScheduleMap(schedule, year, month) {
-    const map = {};
-    if (!schedule || !schedule.assignments) return map;
-    for (const a of schedule.assignments) {
-      map[getScheduleKey(year, month, a.day, a.preacher._id)] = a.slot;
-    }
-    return map;
-  }
-
-  const preachers = JSON.parse(wrap.dataset.preachers);
-  let currentYear, currentMonth;
-
-  function render(year, month) {
-    currentYear = year;
-    currentMonth = month;
-
-    titleEl.textContent = `${MONTHS_UK[month]} ${year}`;
-    monthSelect.value = month;
-    yearSelect.value = year;
-
-    const daysInMonth = getMonthDays(year, month);
-    const days = [];
-    for (let d = 1; d <= daysInMonth; d++) {
-      if (isPreachingDay(year, month, d)) {
-        days.push(d);
-      }
-    }
-
-    thead.innerHTML = "";
-    tbody.innerHTML = "";
-
-    const headRow = document.createElement("tr");
-    const nameTh = document.createElement("th");
-    nameTh.textContent = "Проповідник";
-    headRow.appendChild(nameTh);
-
-    for (const d of days) {
-      const th = document.createElement("th");
-      const dayName = DAY_NAMES[new Date(year, month, d).getDay()];
-      th.innerHTML = `${d}<br><span class="th--day-name">${dayName}</span>`;
-      if (new Date(year, month, d).getDay() === 0) {
-        th.classList.add("th--sunday");
-      }
-      headRow.appendChild(th);
-    }
-    thead.appendChild(headRow);
-
-    loadSchedule(month, year).then((schedule) => {
-      const scheduleMap = buildScheduleMap(schedule, year, month);
-
-      for (const preacher of preachers) {
-        const tr = document.createElement("tr");
-
-        const nameTd = document.createElement("td");
-        nameTd.textContent = preacher.name;
-        tr.appendChild(nameTd);
-
-        for (const d of days) {
-          const td = document.createElement("td");
-          if (new Date(year, month, d).getDay() === 0) {
-            td.classList.add("td--sunday");
-          }
-          const key = getScheduleKey(year, month, d, preacher._id);
-          const slot = scheduleMap[key];
-          if (slot) {
-            const badge = document.createElement("span");
-            badge.className = slot === 1 ? "preachers-cell--slot1" : "preachers-cell--slot2";
-            badge.textContent = slot;
-            td.appendChild(badge);
-          }
-          tr.appendChild(td);
-        }
-
-        tbody.appendChild(tr);
-      }
-    });
-  }
-
-  function navigate(delta) {
-    currentMonth += delta;
-    if (currentMonth > 11) {
-      currentMonth = 0;
-      currentYear++;
-    } else if (currentMonth < 0) {
-      currentMonth = 11;
-      currentYear--;
-    }
-    render(currentYear, currentMonth);
-  }
-
-  document.querySelectorAll("[data-preachers-nav]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      navigate(parseInt(btn.dataset.preachersNav, 10));
-    });
-  });
-
-  monthSelect.addEventListener("change", () => {
-    render(currentYear, parseInt(monthSelect.value, 10));
-  });
-
-  yearSelect.addEventListener("change", () => {
-    render(parseInt(yearSelect.value, 10), currentMonth);
-  });
-
-  const today = new Date();
-  render(today.getFullYear(), today.getMonth());
+  initPreacherSchedule(
+    document.getElementById("preachers-table-wrap"),
+    document.getElementById("preachers-title"),
+    document.getElementById("preachers-month-select"),
+    document.getElementById("preachers-year-select"),
+  );
 </script>
