@@ -1,0 +1,13 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "paths": {
+      "@fcb/app/*": ["./frontend/src/*"],
+      "@fcb/studio/*": ["./studio/src/*"]
+    }
+  },
+  "references": [
+    {"path": "./frontend"},
+    {"path": "./studio"}
+  ]
+}

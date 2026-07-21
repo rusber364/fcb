@@ -71,6 +71,90 @@ export interface Seo {
   ogImage?: SanityImage;
 }
 
+export async function getEvents(): Promise<Event[]> {
+  return loadQuery<Event[]>(
+    groq`*[_type == "event"] | order(date asc) {
+      _id,
+      _type,
+      title,
+      slug,
+      date,
+      endDate,
+      time,
+      location,
+      category,
+      description,
+    }`,
+  );
+}
+
+export interface Event {
+  _id: string;
+  _type: "event";
+  title: string;
+  slug: Slug;
+  date: string;
+  endDate?: string;
+  time?: string;
+  location?: string;
+  category?: "sunday" | "youth" | "other";
+  description?: string;
+}
+
+export async function getPreachers(): Promise<Preacher[]> {
+  return loadQuery<Preacher[]>(
+    groq`*[_type == "preacher"] | order(sortOrder asc, name asc) {
+      _id,
+      _type,
+      name,
+      sortOrder,
+    }`,
+  );
+}
+
+export interface Preacher {
+  _id: string;
+  _type: "preacher";
+  name: string;
+  sortOrder?: number;
+}
+
+export async function getMonthlySchedule(month: number, year: number): Promise<MonthlySchedule | null> {
+  return loadQuery<MonthlySchedule | null>(
+    groq`*[_type == "monthlySchedule" && month == $month && year == $year][0] {
+      _id,
+      _type,
+      month,
+      year,
+      assignments[] {
+        _key,
+        day,
+        slot,
+        preacher->{_id, name},
+      },
+    }`,
+    { month, year },
+  );
+}
+
+export interface MonthlySchedule {
+  _id: string;
+  _type: "monthlySchedule";
+  month: number;
+  year: number;
+  assignments: PreacherAssignment[];
+}
+
+export interface PreacherAssignment {
+  _key: string;
+  day: number;
+  slot: 1 | 2;
+  preacher: {
+    _id: string;
+    name: string;
+  };
+}
+
 export interface Post {
   _id: string;
   _type: "post";
