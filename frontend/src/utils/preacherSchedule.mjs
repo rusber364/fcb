@@ -40,8 +40,9 @@ async function loadSchedule(month, year) {
 function buildScheduleMap(schedule, year, month) {
   const map = {}
   if (!schedule || !schedule.assignments) return map
-  for (const a of schedule.assignments) {
-    map[getScheduleKey(year, month, a.day, a.preacher._id)] = a.slot
+      for (const a of schedule.assignments) {
+    const d = typeof a.day === 'string' ? parseInt(a.day.split('-')[2], 10) : a.day
+    map[getScheduleKey(year, month, d, a.preacher._id)] = a.slot
   }
   return map
 }

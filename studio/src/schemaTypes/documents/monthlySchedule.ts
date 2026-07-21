@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {DayPicker} from '../../components/DayPicker'
 
 const MONTHS_UK = [
   'Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
@@ -45,6 +46,9 @@ export default defineType({
               title: 'День',
               type: 'number',
               validation: (Rule) => Rule.required().min(1).max(31),
+              components: {
+                input: DayPicker,
+              },
             }),
             defineField({
               name: 'slot',
@@ -69,7 +73,7 @@ export default defineType({
             prepare({preacherName, day, slot}) {
               return {
                 title: preacherName || 'Невідомий',
-                subtitle: `День ${day}, ${slot || '?'}-ша служба`,
+                subtitle: day ? `${day} число, ${slot || '?'}-ша служба` : '',
               }
             },
           },
