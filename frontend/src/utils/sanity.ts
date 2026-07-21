@@ -101,6 +101,60 @@ export interface Event {
   description?: string;
 }
 
+export async function getPreachers(): Promise<Preacher[]> {
+  return loadQuery<Preacher[]>(
+    groq`*[_type == "preacher"] | order(sortOrder asc, name asc) {
+      _id,
+      _type,
+      name,
+      sortOrder,
+    }`,
+  );
+}
+
+export interface Preacher {
+  _id: string;
+  _type: "preacher";
+  name: string;
+  sortOrder?: number;
+}
+
+export async function getMonthlySchedule(month: number, year: number): Promise<MonthlySchedule | null> {
+  return loadQuery<MonthlySchedule | null>(
+    groq`*[_type == "monthlySchedule" && month == $month && year == $year][0] {
+      _id,
+      _type,
+      month,
+      year,
+      assignments[] {
+        _key,
+        day,
+        slot,
+        preacher->{_id, name},
+      },
+    }`,
+    { month, year },
+  );
+}
+
+export interface MonthlySchedule {
+  _id: string;
+  _type: "monthlySchedule";
+  month: number;
+  year: number;
+  assignments: PreacherAssignment[];
+}
+
+export interface PreacherAssignment {
+  _key: string;
+  day: number;
+  slot: 1 | 2;
+  preacher: {
+    _id: string;
+    name: string;
+  };
+}
+
 export interface Post {
   _id: string;
   _type: "post";

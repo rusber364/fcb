@@ -1,0 +1,558 @@
+---
+import { MONTHS_UK } from "@/utils/calendar.mjs";
+import Layout from "../layouts/Layout.astro";
+import { getPreachers } from "../utils/sanity";
+
+const preachers = await getPreachers();
+const today = new Date();
+const currentYear = today.getFullYear();
+const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
+---
+
+<Layout title="Графік проповідників">
+  <div class="container font-serif pt-7 pb-20 max-md:pt-4">
+    <div class="preachers-page-top">
+      <div class="calendar-brand" aria-label="Перша баптистська церква">
+        <img src="/img/logo.png" alt="" width="67" height="75" />
+        <span>Перша<br />баптистська<br />церква</span>
+      </div>
+      <h1>Графік проповідників</h1>
+    </div>
+
+    <div class="preachers-header">
+      <h2 id="preachers-title"></h2>
+      <div class="preachers-controls">
+        <button class="preachers-nav-btn" data-preachers-nav="-1" aria-label="Попередній місяць">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="preachers-selects">
+          <label class="preachers-select-field">
+            <span>Рік</span>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <select id="preachers-year-select">
+              {years.map((y) => (
+                <option value={y} selected={y === currentYear}>{y}</option>
+              ))}
+            </select>
+          </label>
+          <label class="preachers-select-field preachers-select-field-month">
+            <span>Місяць</span>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <select id="preachers-month-select">
+              {MONTHS_UK.map((m, i) => (
+                <option value={i} selected={i === today.getMonth()}>{m}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <button class="preachers-nav-btn" data-preachers-nav="1" aria-label="Наступний місяць">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="preachers-table-wrap" id="preachers-table-wrap" data-preachers={JSON.stringify(preachers)}>
+      <table class="preachers-table">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</Layout>
+
+<style is:global>
+  .preachers-page-top {
+    display: flex;
+    align-items: center;
+    gap: 52px;
+    margin-bottom: 52px;
+  }
+
+  .preachers-page-top .calendar-brand {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 18px;
+    color: #111;
+  }
+
+  .preachers-page-top .calendar-brand img {
+    width: 76px;
+    height: auto;
+  }
+
+  .preachers-page-top .calendar-brand span {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.28;
+    text-transform: uppercase;
+  }
+
+  .preachers-page-top h1 {
+    margin: 0;
+    color: #101114;
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 500;
+    line-height: .95;
+    letter-spacing: -.04em;
+    text-transform: uppercase;
+  }
+
+  .preachers-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 30px;
+  }
+
+  .preachers-header h2 {
+    margin: 0;
+    background: linear-gradient(90deg, #25b57a 0%, #0ea7dc 95%);
+    background-clip: text;
+    color: transparent;
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -.04em;
+  }
+
+  .preachers-controls,
+  .preachers-selects,
+  .preachers-select-field,
+  .preachers-nav-btn {
+    display: flex;
+    align-items: center;
+  }
+
+  .preachers-controls {
+    gap: 12px;
+  }
+
+  .preachers-selects {
+    gap: 16px;
+  }
+
+  .preachers-select-field {
+    min-height: 46px;
+    gap: 10px;
+    padding: 0 18px 0 20px;
+    border: 1px solid #edf0f2;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%);
+    box-shadow: inset 0 -6px 14px rgba(0, 0, 0, .025);
+    color: #111;
+  }
+
+  .preachers-select-field span {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .preachers-select-field svg {
+    flex: 0 0 auto;
+  }
+
+  .preachers-select-field select {
+    min-width: 82px;
+    padding: 0 28px 0 0;
+    border: 0;
+    background: transparent;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='11' viewBox='0 0 17 11'%3E%3Cpath fill='none' stroke='%23111111' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' d='m2 2 6.5 6.5L15 2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right center;
+    color: #111;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .preachers-select-field select:focus-visible {
+    outline: none;
+  }
+
+  .preachers-select-field-month select {
+    min-width: 140px;
+  }
+
+  .preachers-nav-btn {
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border: 1px solid #edf0f2;
+    border-radius: 14px;
+    background: #fff;
+    color: #101114;
+    cursor: pointer;
+    transition: box-shadow .25s ease, color .25s ease, transform .25s ease;
+  }
+
+  .preachers-nav-btn:hover {
+    color: #22c8ad;
+    box-shadow: 0 12px 22px rgba(20, 38, 35, .08);
+    transform: translateY(-1px);
+  }
+
+  .preachers-table-wrap {
+    padding: 20px 22px 22px;
+    border: 1px solid #edf0f2;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 14px 45px rgba(20, 38, 35, .045);
+    overflow-x: auto;
+  }
+
+  .preachers-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+    min-width: 720px;
+  }
+
+  .preachers-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 8px 6px;
+    border-bottom: 2px solid #e8edf0;
+    background: #fff;
+    color: #10152d;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+
+  .preachers-table thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    text-align: left;
+    padding-left: 12px;
+    min-width: 180px;
+  }
+
+  .preachers-table thead th:nth-child(2) {
+    border-left: 2px solid #e8edf0;
+  }
+
+  .preachers-table thead th:last-child {
+    border-right: none;
+  }
+
+  .preachers-table thead .th--sunday {
+    color: #24c56c;
+  }
+
+  .preachers-table thead .th--day-name {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    opacity: .6;
+    margin-top: 2px;
+  }
+
+  .preachers-table tbody tr {
+    transition: background .15s ease;
+  }
+
+  .preachers-table tbody tr:hover {
+    background: #fafbfc;
+  }
+
+  .preachers-table tbody tr:not(:last-child) td {
+    border-bottom: 1px solid #f0f2f4;
+  }
+
+  .preachers-table tbody td {
+    padding: 10px 6px;
+    text-align: center;
+    color: #10152d;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .preachers-table tbody td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: #fff;
+    text-align: left;
+    padding-left: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #10152d;
+    min-width: 180px;
+  }
+
+  .preachers-table tbody td:first-child::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -2px;
+    width: 2px;
+    height: 100%;
+    background: #e8edf0;
+  }
+
+  .preachers-table tbody td:nth-child(2) {
+    border-left: 2px solid #e8edf0;
+  }
+
+  .preachers-table tbody tr:hover td:first-child {
+    background: #fafbfc;
+  }
+
+  .preachers-cell--slot1 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #dff8f1;
+    color: #0a8899;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .preachers-cell--slot2 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #ffebd6;
+    color: #c97a1a;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .preachers-table tbody .td--sunday {
+    background: #fafff8;
+  }
+
+  @media (max-width: 1024px) {
+    .preachers-page-top {
+      gap: 28px;
+      margin-bottom: 38px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .preachers-page-top {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .preachers-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .preachers-controls {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .preachers-selects {
+      flex: 1;
+      flex-direction: column;
+    }
+
+    .preachers-select-field {
+      min-height: 56px;
+      width: 100%;
+    }
+
+    .preachers-select-field select {
+      width: 100%;
+      font-size: 20px;
+    }
+
+    .preachers-table-wrap {
+      padding: 12px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .preachers-page-top .calendar-brand img {
+      width: 60px;
+    }
+
+    .preachers-page-top .calendar-brand span {
+      font-size: 14px;
+    }
+
+    .preachers-nav-btn {
+      width: 40px;
+      height: 40px;
+    }
+  }
+</style>
+
+<script>
+  import { sanityClient } from "sanity:client";
+  import { MONTHS_UK } from "../utils/calendar.mjs";
+
+  const wrap = document.getElementById("preachers-table-wrap");
+  const table = wrap.querySelector(".preachers-table");
+  const thead = table.querySelector("thead");
+  const tbody = table.querySelector("tbody");
+  const titleEl = document.getElementById("preachers-title");
+  const monthSelect = document.getElementById("preachers-month-select");
+  const yearSelect = document.getElementById("preachers-year-select");
+
+  const DAY_NAMES = ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+  const PREACHING_DAYS = [0, 3, 5, 6];
+
+  function getMonthDays(year, month) {
+    return new Date(year, month + 1, 0).getDate();
+  }
+
+  function isPreachingDay(year, month, day) {
+    return PREACHING_DAYS.includes(new Date(year, month, day).getDay());
+  }
+
+  function formatDateKey(year, month, day) {
+    const m = String(month + 1).padStart(2, "0");
+    const d = String(day).padStart(2, "0");
+    return `${year}-${m}-${d}`;
+  }
+
+  function getScheduleKey(year, month, day, preacherId) {
+    return `${formatDateKey(year, month, day)}_${preacherId}`;
+  }
+
+  async function loadSchedule(month, year) {
+    const data = await sanityClient.fetch(
+      `*[_type == "monthlySchedule" && month == $month && year == $year][0]{
+        _id,
+        assignments[] {
+          _key,
+          day,
+          slot,
+          preacher->{_id, name}
+        }
+      }`,
+      { month: month + 1, year }
+    );
+    return data || null;
+  }
+
+  function buildScheduleMap(schedule, year, month) {
+    const map = {};
+    if (!schedule || !schedule.assignments) return map;
+    for (const a of schedule.assignments) {
+      map[getScheduleKey(year, month, a.day, a.preacher._id)] = a.slot;
+    }
+    return map;
+  }
+
+  const preachers = JSON.parse(wrap.dataset.preachers);
+  let currentYear, currentMonth;
+
+  function render(year, month) {
+    currentYear = year;
+    currentMonth = month;
+
+    titleEl.textContent = `${MONTHS_UK[month]} ${year}`;
+    monthSelect.value = month;
+    yearSelect.value = year;
+
+    const daysInMonth = getMonthDays(year, month);
+    const days = [];
+    for (let d = 1; d <= daysInMonth; d++) {
+      if (isPreachingDay(year, month, d)) {
+        days.push(d);
+      }
+    }
+
+    thead.innerHTML = "";
+    tbody.innerHTML = "";
+
+    const headRow = document.createElement("tr");
+    const nameTh = document.createElement("th");
+    nameTh.textContent = "Проповідник";
+    headRow.appendChild(nameTh);
+
+    for (const d of days) {
+      const th = document.createElement("th");
+      const dayName = DAY_NAMES[new Date(year, month, d).getDay()];
+      th.innerHTML = `${d}<br><span class="th--day-name">${dayName}</span>`;
+      if (new Date(year, month, d).getDay() === 0) {
+        th.classList.add("th--sunday");
+      }
+      headRow.appendChild(th);
+    }
+    thead.appendChild(headRow);
+
+    loadSchedule(month, year).then((schedule) => {
+      const scheduleMap = buildScheduleMap(schedule, year, month);
+
+      for (const preacher of preachers) {
+        const tr = document.createElement("tr");
+
+        const nameTd = document.createElement("td");
+        nameTd.textContent = preacher.name;
+        tr.appendChild(nameTd);
+
+        for (const d of days) {
+          const td = document.createElement("td");
+          if (new Date(year, month, d).getDay() === 0) {
+            td.classList.add("td--sunday");
+          }
+          const key = getScheduleKey(year, month, d, preacher._id);
+          const slot = scheduleMap[key];
+          if (slot) {
+            const badge = document.createElement("span");
+            badge.className = slot === 1 ? "preachers-cell--slot1" : "preachers-cell--slot2";
+            badge.textContent = slot;
+            td.appendChild(badge);
+          }
+          tr.appendChild(td);
+        }
+
+        tbody.appendChild(tr);
+      }
+    });
+  }
+
+  function navigate(delta) {
+    currentMonth += delta;
+    if (currentMonth > 11) {
+      currentMonth = 0;
+      currentYear++;
+    } else if (currentMonth < 0) {
+      currentMonth = 11;
+      currentYear--;
+    }
+    render(currentYear, currentMonth);
+  }
+
+  document.querySelectorAll("[data-preachers-nav]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      navigate(parseInt(btn.dataset.preachersNav, 10));
+    });
+  });
+
+  monthSelect.addEventListener("change", () => {
+    render(currentYear, parseInt(monthSelect.value, 10));
+  });
+
+  yearSelect.addEventListener("change", () => {
+    render(parseInt(yearSelect.value, 10), currentMonth);
+  });
+
+  const today = new Date();
+  render(today.getFullYear(), today.getMonth());
+</script>
