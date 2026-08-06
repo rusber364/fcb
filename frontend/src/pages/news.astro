@@ -1,0 +1,35 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import Layout from "../layouts/Layout.astro";
+import { formatDate } from "../utils";
+import { cardBackground } from "../utils/image";
+import { getPosts } from "../utils/sanity";
+
+const posts = await getPosts();
+---
+
+<Layout title="Новини" description="Новини та події Першої баптистської церкви у Черкасах.">
+  <div class="container font-serif pt-7 pb-20 max-md:pt-4">
+    <h1 class="mb-9 text-4xl font-bold text-[#333] max-md:mb-6 max-md:text-3xl">Новини</h1>
+
+    {
+      posts.length > 0 ? (
+        <div class="grid grid-cols-[repeat(auto-fill,330px)] justify-center gap-8 max-xs:grid-cols-1 max-xs:justify-stretch">
+          {posts.map((post) => (
+            <a class="news-card" href={`/post/${stegaClean(post.slug.current)}`}>
+              <div class="news-card__image" style={cardBackground(post.mainImage)} aria-hidden="true" />
+              <time datetime={post._createdAt.slice(0, 10)}>{formatDate(post._createdAt)}</time>
+              <div class="news-card__title">{post.title}</div>
+              <p>{post.excerpt}</p>
+              <span class="news-card__link">
+                Читати далі <img src="/img/arrow-read.png" alt="" width="22" height="18" />
+              </span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="text-xl text-[#3a3a3a]">Новин поки немає. Незабаром тут зʼявляться публікації.</p>
+      )
+    }
+  </div>
+</Layout>
