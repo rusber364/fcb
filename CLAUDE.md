@@ -82,9 +82,11 @@ Git history has been steadily moving sections out of (1) into (2) or (3), one se
 
 ## Studio
 
-Schemas in `studio/src/schemaTypes/`, registered in `schemaTypes/index.ts` — a new type must be added to that array. Documents: `post`, `event`, `preacher`, `monthlySchedule`; objects: `blockContent`, `seo`.
+Schemas in `studio/src/schemaTypes/`, registered in `schemaTypes/index.ts` — a new type must be added to that array. Documents: `post`, `event`, `preacher`, `monthlySchedule`, `heroCarousel`; objects: `blockContent`, `seo`.
 
-`sanity.config.ts` wires the Presentation tool: `mainDocuments` maps `/post/:slug` back to a document and `locations` maps a post to its preview URL. Both cover `post` only — new previewable routes need entries in both.
+`structureTool` no longer uses the default structure: `heroCarousel` is pinned as a singleton (fixed `documentId: 'heroCarousel'`) and then filtered out of `S.documentTypeListItems()`. Any further singleton needs both halves — the explicit `listItem` **and** the filter — or it shows up twice and editors can create duplicates.
+
+`sanity.config.ts` also wires the Presentation tool: `mainDocuments` maps `/post/:slug` back to a document, and `locations` maps `post` to its preview URL and `heroCarousel` to `/`. New previewable routes need matching entries. Note `defineLocations` requires `select` when you pass `resolve`; for a document that always lives at one URL, pass the static `{locations: [...]}` shape instead.
 
 Custom inputs live in `studio/src/components/`. `DayPicker.tsx` is attached to `monthlySchedule.assignments[].day` via `components.input`: the stored value is a plain day **number**, and the `<input type="date">` is only UI sugar assembled from the sibling `month`/`year` through `useFormValue`. (`buildScheduleMap` in `preacherSchedule.mjs` still parses a `YYYY-MM-DD` string defensively for older data.)
 
