@@ -18,7 +18,21 @@ export default defineConfig({
   projectId,
   dataset,
   plugins: [
-    structureTool(),
+    structureTool({
+      // Карусель — один-єдиний документ із фіксованим id, тому вона відкривається
+      // напряму зі списку, а не як тип, у якому можна наплодити копій.
+      structure: (S) =>
+        S.list()
+          .title('Контент')
+          .items([
+            S.listItem()
+              .title('Карусель на головній')
+              .id('heroCarousel')
+              .child(S.document().schemaType('heroCarousel').documentId('heroCarousel')),
+            S.divider(),
+            ...S.documentTypeListItems().filter((item) => item.getId() !== 'heroCarousel'),
+          ]),
+    }),
     presentationTool({
       previewUrl,
       resolve: {
@@ -40,6 +54,11 @@ export default defineConfig({
                 ? [{title: doc?.title || 'Untitled', href: `/post/${doc.slug}`}]
                 : [],
             }),
+          }),
+          // Карусель живе тільки на головній, тож адреса фіксована й
+          // від вмісту документа не залежить.
+          heroCarousel: defineLocations({
+            locations: [{title: 'Головна', href: '/'}],
           }),
         },
       },

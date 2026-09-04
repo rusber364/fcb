@@ -1,28 +1,132 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import { buildSrcSet, urlFor } from "../utils/image";
+import { getHeroSlides } from "../utils/sanity";
+
+const slides = await getHeroSlides();
+
+const SLIDE_WIDTHS = [640, 900, 1200, 1600];
+const SLIDE_SIZES = "(max-width: 1240px) 100vw, 1200px";
+---
+
 <section class="hero" aria-label="Головні події церкви">
   <div class="hero__slider swiper">
     <div class="swiper-wrapper">
-      <div class="hero__slide swiper-slide">
-        <img src="img/photo_2026-07-11_16-59-56.jpg" alt="" width="1200" height="698">
-      </div>
-      <div class="hero__slide swiper-slide">
-        <img src="img/photo_2026-07-11_16-59-23.jpg" alt="" width="1200" height="698">
-      </div>
-      <div class="hero__slide swiper-slide">
-        <img src="img/photo_2026-07-11_16-59-31.jpg" alt="" width="1200" height="698">
-      </div>
-      <div class="hero__slide swiper-slide">
-        <video class="hero__video" data-hero-video data-src="img/IMG_6673.MOV" poster="img/photo_2026-07-11_16-59-23.jpg" width="1200" height="698" muted loop playsinline webkit-playsinline preload="none" aria-label="Відео церкви"></video>
-      </div>
-      <div class="hero__slide swiper-slide">
-        <video class="hero__video" data-hero-video data-src="img/IMG_6608.MOV" poster="img/photo_2026-07-11_16-59-31.jpg" width="1200" height="698" muted loop playsinline webkit-playsinline preload="none" aria-label="Відео церкви"></video>
-      </div>
-      <div class="hero__slide swiper-slide">
-        <video class="hero__video" data-hero-video data-src="img/IMG_1471.MOV" poster="img/photo_2026-07-11_16-59-56.jpg" width="1200" height="698" muted loop playsinline webkit-playsinline preload="none" aria-label="Відео церкви"></video>
-      </div>
-      <div class="hero__slide swiper-slide">
-        <video class="hero__video" data-hero-video data-src="img/IMG_1051.MOV" poster="img/photo_2026-07-11_16-59-23.jpg" width="1200" height="698" muted loop playsinline webkit-playsinline preload="none" aria-label="Відео церкви"></video>
-      </div>
-
+      {
+        slides.length > 0 ? (
+          slides.map((slide, index) =>
+            slide._type === "imageSlide" ? (
+              <div class="hero__slide swiper-slide">
+                <img
+                  src={urlFor(slide.image).width(1200).auto("format").quality(80).url()}
+                  srcset={buildSrcSet(slide.image, SLIDE_WIDTHS)}
+                  sizes={SLIDE_SIZES}
+                  width="1200"
+                  height="698"
+                  alt={stegaClean(slide.alt) || ""}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding={index === 0 ? "sync" : "async"}
+                />
+              </div>
+            ) : (
+              <div class="hero__slide swiper-slide">
+                <video
+                  class="hero__video"
+                  data-hero-video
+                  data-src={stegaClean(slide.videoUrl)}
+                  poster={urlFor(slide.poster).width(1200).auto("format").quality(80).url()}
+                  width="1200"
+                  height="698"
+                  muted
+                  loop
+                  playsinline
+                  webkit-playsinline
+                  preload="none"
+                  aria-label={stegaClean(slide.alt) || "Відео церкви"}
+                />
+              </div>
+            ),
+          )
+        ) : (
+          /* Запасні слайди на випадок, поки карусель у Studio порожня.
+             Після того як контент внесуть, цю гілку можна видалити разом із файлами в public/img. */
+          <>
+            <div class="hero__slide swiper-slide">
+              <img src="/img/photo_2026-07-11_16-59-56.jpg" alt="" width="1200" height="698" />
+            </div>
+            <div class="hero__slide swiper-slide">
+              <img src="/img/photo_2026-07-11_16-59-23.jpg" alt="" width="1200" height="698" />
+            </div>
+            <div class="hero__slide swiper-slide">
+              <img src="/img/photo_2026-07-11_16-59-31.jpg" alt="" width="1200" height="698" />
+            </div>
+            <div class="hero__slide swiper-slide">
+              <video
+                class="hero__video"
+                data-hero-video
+                data-src="/img/IMG_6673.MOV"
+                poster="/img/photo_2026-07-11_16-59-23.jpg"
+                width="1200"
+                height="698"
+                muted
+                loop
+                playsinline
+                webkit-playsinline
+                preload="none"
+                aria-label="Відео церкви"
+              />
+            </div>
+            <div class="hero__slide swiper-slide">
+              <video
+                class="hero__video"
+                data-hero-video
+                data-src="/img/IMG_6608.MOV"
+                poster="/img/photo_2026-07-11_16-59-31.jpg"
+                width="1200"
+                height="698"
+                muted
+                loop
+                playsinline
+                webkit-playsinline
+                preload="none"
+                aria-label="Відео церкви"
+              />
+            </div>
+            <div class="hero__slide swiper-slide">
+              <video
+                class="hero__video"
+                data-hero-video
+                data-src="/img/IMG_1471.MOV"
+                poster="/img/photo_2026-07-11_16-59-56.jpg"
+                width="1200"
+                height="698"
+                muted
+                loop
+                playsinline
+                webkit-playsinline
+                preload="none"
+                aria-label="Відео церкви"
+              />
+            </div>
+            <div class="hero__slide swiper-slide">
+              <video
+                class="hero__video"
+                data-hero-video
+                data-src="/img/IMG_1051.MOV"
+                poster="/img/photo_2026-07-11_16-59-23.jpg"
+                width="1200"
+                height="698"
+                muted
+                loop
+                playsinline
+                webkit-playsinline
+                preload="none"
+                aria-label="Відео церкви"
+              />
+            </div>
+          </>
+        )
+      }
     </div>
 
     <button class="hero__arrow hero__arrow_prev" type="button" aria-label="Попередній слайд">
@@ -35,11 +139,10 @@
   </div>
 </section>
 
-
 <script>
   import { initHeroSlider } from '../utils/initHeroSlider.mjs';
   import { initMobileContentSliders } from '../utils/initMobileContentSliders.mjs';
- 
+
   initHeroSlider();
   initMobileContentSliders();
 </script>

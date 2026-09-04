@@ -4,5 +4,6 @@ import post from './documents/post'
 import event from './documents/event'
 import preacher from './documents/preacher'
 import monthlySchedule from './documents/monthlySchedule'
+import heroCarousel from './documents/heroCarousel'
 
-export const schemaTypes = [post, blockContent, seo, event, preacher, monthlySchedule]
+export const schemaTypes = [post, blockContent, seo, event, preacher, monthlySchedule, heroCarousel]

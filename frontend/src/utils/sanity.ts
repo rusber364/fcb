@@ -155,6 +155,45 @@ export interface PreacherAssignment {
   };
 }
 
+// Карусель — один документ з фіксованим id (див. structureTool у sanity.config.ts),
+// тож беремо його slides[] напряму. Порожній масив означає, що редактор ще нічого
+// не додав, і Hero.astro показує вбудовані слайди.
+export async function getHeroSlides(): Promise<HeroSlide[]> {
+  const slides = await loadQuery<HeroSlide[] | null>(
+    groq`*[_type == "heroCarousel"][0].slides[] {
+      _key,
+      _type,
+      alt,
+      _type == "imageSlide" => {
+        image ${imageProjection}
+      },
+      _type == "videoSlide" => {
+        poster ${imageProjection},
+        "videoUrl": video.asset->url
+      }
+    }`,
+  );
+
+  return slides ?? [];
+}
+
+export interface HeroImageSlide {
+  _key: string;
+  _type: "imageSlide";
+  alt?: string;
+  image: SanityImage;
+}
+
+export interface HeroVideoSlide {
+  _key: string;
+  _type: "videoSlide";
+  alt?: string;
+  poster: SanityImage;
+  videoUrl: string;
+}
+
+export type HeroSlide = HeroImageSlide | HeroVideoSlide;
+
 export interface Post {
   _id: string;
   _type: "post";
