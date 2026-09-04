@@ -32,7 +32,7 @@ Two separate env files, different prefixes — they are not shared:
 - `frontend/.env` — `PUBLIC_SANITY_STUDIO_PROJECT_ID`, `PUBLIC_SANITY_STUDIO_DATASET`, `SANITY_API_READ_TOKEN`, `PUBLIC_SANITY_STUDIO_URL`, `PUBLIC_SANITY_VISUAL_EDITING_ENABLED`.
 - `studio/.env` — `SANITY_STUDIO_PROJECT_ID`, `SANITY_STUDIO_DATASET`, `SANITY_STUDIO_PREVIEW_URL`, `SANITY_STUDIO_STUDIO_HOST`.
 
-`PUBLIC_SANITY_VISUAL_EDITING_ENABLED` is a single switch with wide consequences (see `frontend/src/utils/sanity.ts` `loadQuery`): `"true"` → drafts perspective + stega encoding + read token + no CDN; anything else → published perspective + CDN + no stega. Production must have it off, and `PUBLIC_SANITY_STUDIO_URL` must point at the deployed Studio (stega "Open in Studio" links are built from it). See README.md "Visual Editing notes" for the `createDataAttribute` pattern needed on non-string fields (images, Portable Text arrays), which stega cannot encode; `post/[slug].astro` is the worked example.
+`PUBLIC_SANITY_VISUAL_EDITING_ENABLED` is a single switch with wide consequences (see `frontend/src/utils/sanity.ts` `loadQuery`): `"true"` → drafts perspective + stega encoding + read token + no CDN; anything else → published perspective + CDN + no stega. It also gates ISR in `astro.config.mjs` — with visual editing on, the Vercel cache is switched off so the Presentation tool can never serve a stale draft. Production must have it off, and `PUBLIC_SANITY_STUDIO_URL` must point at the deployed Studio (stega "Open in Studio" links are built from it). See README.md "Visual Editing notes" for the `createDataAttribute` pattern needed on non-string fields (images, Portable Text arrays), which stega cannot encode; `post/[slug].astro` is the worked example.
 
 ## Data flow
 
