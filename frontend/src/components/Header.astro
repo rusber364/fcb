@@ -6,12 +6,59 @@
     </a>
 
     <nav class="site-header__nav" id="site-nav" aria-label="Основна навігація">
-      <a href="/calendar">Календар</a>
+      <a href="/">Головна</a>
+
+      <div class="site-header__group" data-nav-group>
+        <button
+          class="site-header__group-btn"
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="site-nav-about"
+        >
+          Про нас
+          <svg class="site-header__chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+            <path d="m1 1.5 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <div class="site-header__submenu" id="site-nav-about">
+          <a href="#">Наше бачення</a>
+          <a href="#">У що ми віримо?</a>
+          <a href="#">Історія нашої церкви</a>
+          <a href="#">Наші лідери</a>
+        </div>
+      </div>
+
+      <div class="site-header__group" data-nav-group>
+        <button
+          class="site-header__group-btn"
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="site-nav-for-you"
+        >
+          Для вас
+          <svg class="site-header__chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+            <path d="m1 1.5 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <div class="site-header__submenu" id="site-nav-for-you">
+          <a href="#">Недільна школа</a>
+          <a href="#">Клуб 4Rest</a>
+          <a href="#">Молодіжне служіння</a>
+          <a href="#">Жіноче служіння</a>
+          <a href="#">Соціальне служіння</a>
+          <a href="#">Музичне служіння</a>
+          <a href="#">Душеопікунство</a>
+          <a href="#">Біблійне навчання</a>
+          <a href="#">Залиш свою молитовну потребу</a>
+          <a href="/calendar">Події</a>
+          <a href="#">Медіа</a>
+        </div>
+      </div>
+
       <a href="/news">Новини</a>
-      <a href="/#about">Про церкву</a>
-      <a href="/#ministries">Служіння</a>
-      <a href="#schedule">Розклад богослужінь</a>
-      <a href="/grafik">Графік</a>
+      <a href="/#contacts">Контакти</a>
       <a class="site-header__btn" href="#">Пожертви</a>
     </nav>
 
@@ -97,6 +144,104 @@
 
   .site-header__nav a:hover {
     color: var(--accent);
+  }
+
+  .site-header__nav > a:not(.site-header__btn),
+  .site-header__group-btn {
+    text-transform: uppercase;
+  }
+
+  .site-header__group {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .site-header__group-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #050505;
+    cursor: pointer;
+  }
+
+  .site-header__group-btn:hover {
+    color: var(--accent);
+  }
+
+  .site-header__chevron {
+    flex: 0 0 auto;
+    transition: transform .25s ease;
+  }
+
+  .site-header__submenu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    min-width: 244px;
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, .94);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 18px 40px rgba(20, 38, 35, .16);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate(-50%, -8px);
+    transition: opacity .24s ease, visibility .24s ease, transform .24s ease;
+  }
+
+  /* Bridges the gap under the parent so the pointer can travel into the panel. */
+  .site-header__submenu::before {
+    content: '';
+    position: absolute;
+    top: -16px;
+    left: 0;
+    right: 0;
+    height: 16px;
+  }
+
+  .site-header__nav .site-header__submenu a {
+    padding: 7px 10px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #111;
+    white-space: nowrap;
+    transition: background .2s ease, color .2s ease;
+  }
+
+  .site-header__nav .site-header__submenu a:hover {
+    background: rgba(255, 101, 1, .08);
+    color: var(--accent);
+  }
+
+  .site-header__group:hover .site-header__submenu,
+  .site-header__group:focus-within .site-header__submenu,
+  .site-header__group.is-open .site-header__submenu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+  }
+
+  .site-header__group:hover .site-header__chevron,
+  .site-header__group:focus-within .site-header__chevron,
+  .site-header__group.is-open .site-header__chevron {
+    transform: rotate(180deg);
   }
 
   .site-header__btn {
@@ -255,6 +400,7 @@
     }
 
     .site-header__nav a,
+    .site-header__group-btn,
     .site-header__btn {
       font-size: 15px;
     }
@@ -317,6 +463,63 @@
       font-size: 26px;
       color: #111;
       text-align: center;
+    }
+
+    /* Dropdowns become accordions — there is no hover on touch. */
+    .site-header__group {
+      position: static;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .site-header__group-btn {
+      justify-content: center;
+      width: 100%;
+      font-size: 26px;
+      color: #111;
+    }
+
+    .site-header__chevron {
+      width: 16px;
+      height: 11px;
+    }
+
+    .site-header__submenu,
+    .site-header__group:hover .site-header__submenu,
+    .site-header__group:focus-within .site-header__submenu,
+    .site-header__group.is-open .site-header__submenu {
+      position: static;
+      display: none;
+      width: 100%;
+      min-width: 0;
+      margin: 0;
+      padding: 8px 0 2px;
+      border-radius: 0;
+      background: transparent;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      box-shadow: none;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: none;
+    }
+
+    .site-header__group.is-open .site-header__submenu {
+      display: flex;
+    }
+
+    .site-header__submenu::before {
+      content: none;
+    }
+
+    .site-header__nav .site-header__submenu a {
+      font-size: 19px;
+      text-align: center;
+      white-space: normal;
     }
 
     .site-header__btn {
@@ -385,8 +588,13 @@
       padding: 108px 16px 30px;
     }
 
-    .site-header__nav a:not(.site-header__btn) {
+    .site-header__nav a:not(.site-header__btn),
+    .site-header__group-btn {
       font-size: 23px;
+    }
+
+    .site-header__nav .site-header__submenu a {
+      font-size: 18px;
     }
 
     .site-header__btn {
@@ -409,8 +617,13 @@
       padding: 0 12px;
     }
 
-    .site-header__nav a:not(.site-header__btn) {
+    .site-header__nav a:not(.site-header__btn),
+    .site-header__group-btn {
       font-size: 21px;
+    }
+
+    .site-header__nav .site-header__submenu a {
+      font-size: 17px;
     }
 
     .site-header__logo-text,

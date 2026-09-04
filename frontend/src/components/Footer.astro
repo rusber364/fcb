@@ -10,6 +10,10 @@
       <a href="#" aria-label="YouTube"><img src="/img/soc3.png" alt="" width="43" height="32" /></a>
     </div>
   </div>
+  <nav class="container site-footer__links" aria-label="Додаткові сторінки">
+    <a href="/calendar">Календар</a>
+    <a href="/grafik">Графік проповідників</a>
+  </nav>
   <div class="container site-footer__meta">
     <p>© 2026 baptist.ck.ua</p>
     <p>Зроблено з <img src="/img/heart.png" alt="" width="28" height="25" /> любов'ю до ближнього</p>
@@ -73,6 +77,25 @@
 
   .site-footer__socials img {
     flex: 0 0 auto;
+  }
+
+  .site-footer__links {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    padding: 22px 20px 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .site-footer__links a {
+    color: #3b3b3b;
+    transition: color .25s ease;
+  }
+
+  .site-footer__links a:hover {
+    color: var(--accent);
   }
 
   .site-footer__meta {
@@ -144,6 +167,13 @@
       justify-content: center;
       width: 100%;
     }
+
+    .site-footer__links {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+      text-align: center;
+    }
   }
 
   @media (max-width: 575px) {
@@ -151,6 +181,7 @@
       padding: 18px 20px;
     }
 
+    .site-footer__links,
     .site-footer__meta {
       padding-right: 0;
       padding-left: 0;
