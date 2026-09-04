@@ -9,12 +9,12 @@ const SLIDE_WIDTHS = [640, 900, 1200, 1600];
 const SLIDE_SIZES = "(max-width: 1240px) 100vw, 1200px";
 ---
 
-<section class="hero" aria-label="Головні події церкви">
-  <div class="hero__slider swiper">
-    <div class="swiper-wrapper">
-      {
-        slides.length > 0 ? (
-          slides.map((slide, index) =>
+{
+  slides.length > 0 && (
+    <section class="hero" aria-label="Головні події церкви">
+      <div class="hero__slider swiper">
+        <div class="swiper-wrapper">
+          {slides.map((slide, index) =>
             slide._type === "imageSlide" ? (
               <div class="hero__slide swiper-slide">
                 <img
@@ -51,98 +51,20 @@ const SLIDE_SIZES = "(max-width: 1240px) 100vw, 1200px";
                 />
               </div>
             ),
-          )
-        ) : (
-          /* Запасні слайди на випадок, поки карусель у Studio порожня.
-             Після того як контент внесуть, цю гілку можна видалити разом із файлами в public/img. */
-          <>
-            <div class="hero__slide swiper-slide">
-              <img src="/img/photo_2026-07-11_16-59-56.jpg" alt="" width="1200" height="698" />
-            </div>
-            <div class="hero__slide swiper-slide">
-              <img src="/img/photo_2026-07-11_16-59-23.jpg" alt="" width="1200" height="698" />
-            </div>
-            <div class="hero__slide swiper-slide">
-              <img src="/img/photo_2026-07-11_16-59-31.jpg" alt="" width="1200" height="698" />
-            </div>
-            <div class="hero__slide swiper-slide">
-              <video
-                class="hero__video"
-                data-hero-video
-                data-src="/img/IMG_6673.mp4"
-                poster="/img/photo_2026-07-11_16-59-23.jpg"
-                width="1200"
-                height="698"
-                muted
-                loop
-                playsinline
-                webkit-playsinline
-                preload="none"
-                aria-label="Відео церкви"
-              />
-            </div>
-            <div class="hero__slide swiper-slide">
-              <video
-                class="hero__video"
-                data-hero-video
-                data-src="/img/IMG_6608.mp4"
-                poster="/img/photo_2026-07-11_16-59-31.jpg"
-                width="1200"
-                height="698"
-                muted
-                loop
-                playsinline
-                webkit-playsinline
-                preload="none"
-                aria-label="Відео церкви"
-              />
-            </div>
-            <div class="hero__slide swiper-slide">
-              <video
-                class="hero__video"
-                data-hero-video
-                data-src="/img/IMG_1471.mp4"
-                poster="/img/photo_2026-07-11_16-59-56.jpg"
-                width="1200"
-                height="698"
-                muted
-                loop
-                playsinline
-                webkit-playsinline
-                preload="none"
-                aria-label="Відео церкви"
-              />
-            </div>
-            <div class="hero__slide swiper-slide">
-              <video
-                class="hero__video"
-                data-hero-video
-                data-src="/img/IMG_1051.mp4"
-                poster="/img/photo_2026-07-11_16-59-23.jpg"
-                width="1200"
-                height="698"
-                muted
-                loop
-                playsinline
-                webkit-playsinline
-                preload="none"
-                aria-label="Відео церкви"
-              />
-            </div>
-          </>
-        )
-      }
-    </div>
+          )}
+        </div>
 
-    <button class="hero__arrow hero__arrow_prev" type="button" aria-label="Попередній слайд">
-      <img src="/img/arrow-left.png" alt="" width="25" height="45" />
-    </button>
-    <button class="hero__arrow hero__arrow_next" type="button" aria-label="Наступний слайд">
-      <img src="/img/arrow-right.png" alt="" width="25" height="45" />
-    </button>
-    <div class="hero__pagination"></div>
-  </div>
-</section>
+        <button class="hero__arrow hero__arrow_prev" type="button" aria-label="Попередній слайд">
+          <img src="/img/arrow-left.png" alt="" width="25" height="45" />
+        </button>
+        <button class="hero__arrow hero__arrow_next" type="button" aria-label="Наступний слайд">
+          <img src="/img/arrow-right.png" alt="" width="25" height="45" />
+        </button>
+        <div class="hero__pagination" />
+      </div>
+    </section>
+  )
+}
 
 <script>
   import { initHeroSlider } from '../utils/initHeroSlider.mjs';
