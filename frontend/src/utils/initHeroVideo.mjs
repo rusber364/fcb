@@ -9,38 +9,20 @@ export function initHeroVideo(slider, swiper) {
     return;
   }
 
-  const loadVideo = function (video, preloadMode) {
-    const src = video.dataset.src || video.getAttribute("src");
+  // Кожен ролик важить кілька мегабайт, тому src підставляється лише тому
+  // відео, що зараз на активному слайді. Решта слайдів показує poster, доки
+  // користувач до них не долистає.
+  const loadVideo = function (video) {
+    const src = video.dataset.src;
 
-    if (!src) {
-      return;
-    }
-
-    if (video.getAttribute("src") !== src) {
-      video.setAttribute("src", src);
-    }
-
-    if (preloadMode && video.preload !== preloadMode) {
-      video.preload = preloadMode;
-    }
-
-    if (video.dataset.loaded === "true") {
+    if (!src || video.dataset.loaded === "true") {
       return;
     }
 
     video.dataset.loaded = "true";
+    video.preload = "auto";
+    video.setAttribute("src", src);
     video.load();
-    video.addEventListener(
-      "loadedmetadata",
-      function () {
-        if (!video.closest(".swiper-slide-active") && video.currentTime === 0) {
-          try {
-            video.currentTime = 0.05;
-          } catch (error) {}
-        }
-      },
-      { once: true },
-    );
     video.addEventListener(
       "canplay",
       function () {
@@ -50,42 +32,30 @@ export function initHeroVideo(slider, swiper) {
     );
   };
 
-  const loadAllVideos = function (preloadMode) {
-    getVideos().forEach(function (video) {
-      loadVideo(video, preloadMode);
+  const loadActiveVideo = function () {
+    const videos = getVideos();
+    let hasActive = false;
+
+    videos.forEach(function (video) {
+      if (video.closest(".swiper-slide-active")) {
+        hasActive = true;
+        loadVideo(video);
+      }
     });
-  };
 
-  loadAllVideos("metadata");
-
-  const scheduleFullPreload = function () {
-    const run = function () {
-      loadAllVideos("auto");
-      syncHeroVideos(slider);
-    };
-
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(run, { timeout: 1500 });
-    } else {
-      window.setTimeout(run, 800);
+    // Слайдер не піднявся (hero__slider_static) — активного слайда немає,
+    // тож вантажимо тільки перший ролик, а не всі одразу.
+    if (!hasActive && !swiper && videos.length) {
+      loadVideo(videos[0]);
     }
   };
 
-  if (document.readyState === "complete") {
-    scheduleFullPreload();
-  } else {
-    window.addEventListener("load", scheduleFullPreload, { once: true });
-  }
+  loadActiveVideo();
 
   if (swiper && typeof swiper.on === "function") {
-    [
-      "init",
-      "loopFix",
-      "slidesLengthChange",
-      "slideChangeTransitionEnd",
-    ].forEach(function (eventName) {
+    ["init", "loopFix", "slidesLengthChange", "slideChangeTransitionEnd"].forEach(function (eventName) {
       swiper.on(eventName, function () {
-        loadAllVideos("metadata");
+        loadActiveVideo();
         syncHeroVideos(slider);
       });
     });
