@@ -6,6 +6,12 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["--filter", "@fcb/app", "dev"],
       "port": 4321
+    },
+    {
+      "name": "studio",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@fcb/studio", "dev"],
+      "port": 3333
     }
   ]
 }
