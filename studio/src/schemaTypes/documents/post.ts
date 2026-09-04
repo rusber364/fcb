@@ -1,24 +1,25 @@
 import {defineField, defineType} from 'sanity'
 
 /**
- * Post schema.  Define and edit the fields for the 'post' content type.
+ * Новина — те, що показується на /news і на головній.
  * Learn more: https://www.sanity.io/docs/schema-types
  */
 
 export default defineType({
   name: 'post',
-  title: 'Post',
+  title: 'Новини',
   type: 'document',
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Заголовок',
       type: 'string',
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'Адреса сторінки',
       type: 'slug',
+      description: 'Частина посилання після /post/. Заповнюється автоматично із заголовка.',
       validation: (Rule) => Rule.required(),
       options: {
         source: 'title',
@@ -27,29 +28,31 @@ export default defineType({
     }),
     defineField({
       name: 'excerpt',
-      title: 'Excerpt',
+      title: 'Короткий опис',
       type: 'text',
+      description: 'Показується в картці новини у списку та в соцмережах.',
       rows: 4,
     }),
     defineField({
       name: 'mainImage',
-      title: 'Main image',
+      title: 'Головне зображення',
       type: 'image',
       options: {
         hotspot: true,
       },
-			fields: [
-				defineField({
-					name: 'alt',
-					title: 'Alternative text',
-					type: 'string',
-					validation: (Rule) => Rule.required(),
-				}),
-			],
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Опис зображення',
+          type: 'string',
+          description: 'Читається екранними читалками і показується, якщо фото не завантажилось.',
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
     }),
     defineField({
       name: 'body',
-      title: 'Body',
+      title: 'Текст новини',
       type: 'blockContent',
     }),
     defineField({
@@ -61,12 +64,8 @@ export default defineType({
   preview: {
     select: {
       title: 'title',
-      author: 'author.name',
+      subtitle: 'excerpt',
       media: 'mainImage',
-    },
-    prepare(selection) {
-      const {author} = selection
-      return {...selection, subtitle: author && `by ${author}`}
     },
   },
 })

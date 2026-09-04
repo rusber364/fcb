@@ -1,20 +1,25 @@
 import {defineField, defineType} from 'sanity'
 
+/**
+ * Подія — те, що показується в календарі на /calendar.
+ */
+
 export default defineType({
   name: 'event',
-  title: 'Event',
+  title: 'Події',
   type: 'document',
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Назва',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'Адреса сторінки',
       type: 'slug',
+      description: 'Заповнюється автоматично з назви.',
       validation: (Rule) => Rule.required(),
       options: {
         source: 'title',
@@ -23,31 +28,32 @@ export default defineType({
     }),
     defineField({
       name: 'date',
-      title: 'Date',
+      title: 'Дата',
       type: 'datetime',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'endDate',
-      title: 'End Date',
+      title: 'Дата завершення',
       type: 'datetime',
-      description: 'For multi-day events (optional)',
+      description: 'Тільки для подій, що тривають кілька днів. Необовʼязково.',
     }),
     defineField({
       name: 'time',
-      title: 'Time',
+      title: 'Час',
       type: 'string',
-      description: 'e.g. "10:00"',
+      description: 'Наприклад: 10:00',
     }),
     defineField({
       name: 'location',
-      title: 'Location',
+      title: 'Місце',
       type: 'string',
     }),
     defineField({
       name: 'category',
-      title: 'Category',
+      title: 'Категорія',
       type: 'string',
+      description: 'Визначає колір позначки в календарі.',
       options: {
         list: [
           {title: 'Недільне служіння', value: 'sunday'},
@@ -58,7 +64,7 @@ export default defineType({
     }),
     defineField({
       name: 'description',
-      title: 'Description',
+      title: 'Опис',
       type: 'text',
       rows: 4,
     }),

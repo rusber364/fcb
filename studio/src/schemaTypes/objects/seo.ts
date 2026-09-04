@@ -7,26 +7,29 @@ export default defineType({
   fields: [
     defineField({
       name: 'metaTitle',
-      title: 'Meta title',
+      title: 'Заголовок для пошуку',
       type: 'string',
-      description: 'Overrides the post title in search results and browser tabs. Recommended: 50–60 characters.',
+      description:
+        'Замінює заголовок новини у результатах пошуку та у вкладці браузера. Рекомендовано 50–60 символів.',
       validation: (Rule) =>
-        Rule.max(60).warning('Meta titles over 60 characters may be truncated in search results.'),
+        Rule.max(60).warning('Довші за 60 символів заголовки пошук може обрізати.'),
     }),
     defineField({
       name: 'metaDescription',
-      title: 'Meta description',
+      title: 'Опис для пошуку',
       type: 'text',
       rows: 3,
-      description: 'Overrides the excerpt in search results and social previews. Recommended: 120–160 characters.',
+      description:
+        'Замінює короткий опис у результатах пошуку та при поширенні в соцмережах. Рекомендовано 120–160 символів.',
       validation: (Rule) =>
-        Rule.max(160).warning('Meta descriptions over 160 characters may be truncated in search results.'),
+        Rule.max(160).warning('Довші за 160 символів описи пошук може обрізати.'),
     }),
     defineField({
       name: 'ogImage',
-      title: 'Social share image',
+      title: 'Зображення для соцмереж',
       type: 'image',
-      description: 'Overrides the main image when sharing on social media. Recommended size: 1200×630px.',
+      description:
+        'Замінює головне зображення при поширенні посилання. Рекомендований розмір: 1200×630 пікселів.',
       options: {
         hotspot: true,
       },
