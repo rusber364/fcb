@@ -30,18 +30,23 @@ const SLIDE_SIZES = "(max-width: 1240px) 100vw, 1200px";
               </div>
             ) : (
               <div class="hero__slide swiper-slide">
+                {/* Без постера нема чого показати до завантаження відео, тому такому
+                    слайду одразу даємо src і preload="metadata" — браузер підтягне
+                    початок файлу й намалює перший кадр сам. З постером src лишається
+                    тільки в data-src, і файл не чіпаємо, доки слайд не стане активним. */}
                 <video
                   class="hero__video"
                   data-hero-video
                   data-src={stegaClean(slide.videoUrl)}
-                  poster={urlFor(slide.poster).width(1200).auto("format").quality(80).url()}
+                  src={slide.poster ? undefined : stegaClean(slide.videoUrl)}
+                  poster={slide.poster ? urlFor(slide.poster).width(1200).auto("format").quality(80).url() : undefined}
                   width="1200"
                   height="698"
                   muted
                   loop
                   playsinline
                   webkit-playsinline
-                  preload="none"
+                  preload={slide.poster ? "none" : "metadata"}
                   aria-label={stegaClean(slide.alt) || "Відео церкви"}
                 />
               </div>

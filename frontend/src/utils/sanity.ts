@@ -188,7 +188,8 @@ export interface HeroVideoSlide {
   _key: string;
   _type: "videoSlide";
   alt?: string;
-  poster: SanityImage;
+  /** Необовʼязковий — редактор може завантажити відео без постера (див. Hero.astro) */
+  poster?: SanityImage | null;
   videoUrl: string;
 }
 
