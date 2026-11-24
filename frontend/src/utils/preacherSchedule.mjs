@@ -343,6 +343,7 @@ export function initPreacherSchedule(root) {
     hs.textContent = ''
     hover = null
   }
+  let pointerY = 0
   function showTip(el, html) {
     tip.innerHTML = html
     tip.classList.add('on')
@@ -350,12 +351,19 @@ export function initPreacherSchedule(root) {
     const w = tip.offsetWidth
     const hh = tip.offsetHeight
     const x = Math.max(8, Math.min(r.left + r.width / 2 - w / 2, innerWidth - w - 8))
-    let y = r.top - hh - 8
-    if (y < 8) y = r.bottom + 8
+    // не ховати підказку під липку шапку сайту
+    const minY = Math.max(8, (document.querySelector('.site-header')?.getBoundingClientRect().bottom || 0) + 8)
+    // висока клітинка (колонка «Розбір Слова») — підказка біля курсора, а не над краєм клітинки
+    const top = r.height > 120 ? pointerY - 16 : r.top
+    const bottom = r.height > 120 ? pointerY + 16 : r.bottom
+    let y = top - hh - 8
+    if (y < minY) y = bottom + 8
+    y = Math.max(minY, Math.min(y, innerHeight - hh - 8))
     tip.style.left = `${x}px`
     tip.style.top = `${y}px`
   }
   function onOver(e) {
+    pointerY = e.clientY
     const el = e.target.closest?.('.pg-grid:not(.pg-ppl) td[data-c], .pg-grid:not(.pg-ppl) th[data-c]')
     if (!el || !root.contains(el)) {
       if (hover) hideTip()
