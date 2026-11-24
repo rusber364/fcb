@@ -1,0 +1,967 @@
+---
+import { MONTHS_UK } from "@/utils/calendar.mjs";
+
+interface Props {
+  admin?: boolean;
+}
+
+const { admin = false } = Astro.props;
+const today = new Date();
+const currentYear = today.getFullYear();
+---
+
+<section class="pg" id="pg" data-mode="light" data-admin={admin ? "true" : "false"}>
+  <div class="pg-head">
+    <h1 class="pg-title" id="pg-title">{MONTHS_UK[today.getMonth()]} {currentYear}</h1>
+    <div class="pg-nav">
+      <button class="pg-btn" data-nav="-1" aria-label="Попередній місяць">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <select class="pg-sel pg-month" id="pg-month" aria-label="Місяць"></select>
+      <select class="pg-sel pg-year" id="pg-year" aria-label="Рік"></select>
+      <button class="pg-btn" data-nav="1" aria-label="Наступний місяць">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+      <button class="pg-btn pg-theme" id="pg-theme" aria-label="Світла / темна тема"></button>
+    </div>
+  </div>
+
+  {
+    !admin && (
+      <div class="pg-bar">
+        <div class="pg-tabs" role="tablist" aria-label="Вигляд графіка">
+          <button role="tab" data-view="table" aria-selected="true">Таблиця</button>
+          <button role="tab" data-view="dates" aria-selected="false">По датах</button>
+          <button role="tab" data-view="people" aria-selected="false">Проповідники</button>
+        </div>
+        <label class="pg-find">
+          <span>Підсвітити:</span>
+          <select class="pg-sel" id="pg-hl" aria-label="Підсвітити проповідника" />
+        </label>
+      </div>
+    )
+  }
+
+  <p class="pg-note" id="pg-note"></p>
+  <div id="pg-out"><div class="pg-msg">Завантаження графіка…</div></div>
+  <div class="pg-tip" id="pg-tip" role="tooltip"></div>
+  <div class="pg-pop" id="pg-pop"></div>
+  <div class="pg-toast" id="pg-toast" role="status"></div>
+</section>
+
+<style is:global>
+  .pg {
+    --pg-bg: #ffffff;
+    --pg-ink: #10152d;
+    --pg-mut: #5d6480;
+    --pg-line: #e4e7ef;
+    --pg-card: #f5f7fb;
+    --pg-col: #eef3fb;
+    --pg-cross: #d6e4fa;
+    --pg-red: #d92d2d;
+    --pg-rt: #fff1f1;
+    --pg-yel: #ffe27a;
+    --pg-yt: #fff6cc;
+    --pg-yink: #8a6a00;
+    --pg-me: #fff6e8;
+    color-scheme: light;
+    position: relative;
+    padding: clamp(16px, 3vw, 32px);
+    border: 1px solid var(--pg-line);
+    border-radius: 24px;
+    background: var(--pg-bg);
+    color: var(--pg-ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .pg[data-mode="dark"] {
+    --pg-bg: #0b0f20;
+    --pg-ink: #eef1f8;
+    --pg-mut: #97a0bd;
+    --pg-line: #232a45;
+    --pg-card: #131a31;
+    --pg-col: #16233a;
+    --pg-cross: #1f3b63;
+    --pg-red: #ff5a5a;
+    --pg-rt: #2a1316;
+    --pg-yel: #5a4700;
+    --pg-yt: #2b2405;
+    --pg-yink: #ffd54a;
+    --pg-me: #2a2414;
+    color-scheme: dark;
+  }
+  .pg *,
+  .pg *::before {
+    box-sizing: border-box;
+    min-width: 0;
+  }
+  .pg button,
+  .pg select {
+    font: inherit;
+    color: inherit;
+  }
+  .pg :focus-visible {
+    outline: 2px solid color-mix(in srgb, currentColor 45%, transparent);
+    outline-offset: 2px;
+  }
+
+  /* шапка */
+  .pg-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+  }
+  .pg-title {
+    margin: 0;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--pg-ink);
+  }
+  .pg-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pg-btn {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--pg-line);
+    border-radius: 12px;
+    background: var(--pg-bg);
+    cursor: pointer;
+  }
+  .pg-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+  .pg-btn:hover {
+    background: var(--pg-card);
+  }
+  .pg-sel {
+    height: 44px;
+    padding: 0 40px 0 14px;
+    border: 1px solid var(--pg-line);
+    border-radius: 12px;
+    background-color: var(--pg-bg);
+    background-image:
+      linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position:
+      calc(100% - 21px) 52%,
+      calc(100% - 16px) 52%;
+    background-size:
+      5px 5px,
+      5px 5px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: none;
+  }
+  .pg-sel:focus-visible {
+    outline: none;
+    border-color: color-mix(in srgb, currentColor 55%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 14%, transparent);
+  }
+  .pg-sel option {
+    background: var(--pg-bg);
+    color: var(--pg-ink);
+  }
+  .pg-month {
+    min-width: 160px;
+  }
+
+  /* вкладки, пошук, примітка */
+  .pg-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .pg-tabs {
+    display: flex;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 12px;
+    background: var(--pg-card);
+  }
+  .pg-tabs button {
+    height: 38px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 9px;
+    background: none;
+    color: var(--pg-mut);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .pg-tabs button[aria-selected="true"] {
+    background: var(--pg-bg);
+    color: var(--pg-ink);
+    box-shadow: 0 1px 3px #0002;
+  }
+  .pg-find {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    color: var(--pg-mut);
+    font-size: 14px;
+  }
+  .pg-find .pg-sel {
+    max-width: 240px;
+    font-weight: 500;
+  }
+  .pg-note {
+    margin: 12px 0 14px;
+    color: var(--pg-mut);
+    font-size: 14px;
+  }
+  .pg-note b {
+    color: var(--pg-ink);
+  }
+  .pg-msg {
+    margin: 0 0 14px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: var(--pg-card);
+    font-size: 15px;
+  }
+
+  /* таблиця */
+  .pg-wrap {
+    max-height: calc(100vh - 140px);
+    overflow: auto;
+    border: 1px solid var(--pg-line);
+    border-radius: 16px;
+  }
+  .pg-grid {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+  }
+  .pg-grid th,
+  .pg-grid td {
+    min-width: 46px;
+    height: 40px;
+    padding: 0;
+    border-right: 1px solid var(--pg-line);
+    border-bottom: 1px solid var(--pg-line);
+    text-align: center;
+    transition: background 0.12s;
+  }
+  .pg-grid tr > *:last-child {
+    border-right: 0;
+  }
+  .pg-grid tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+  .pg-grid thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 8px 4px;
+    background: var(--pg-bg);
+    color: var(--pg-ink);
+    line-height: 1.15;
+    vertical-align: bottom;
+  }
+  .pg-grid thead th b {
+    display: block;
+    font-size: 19px;
+    font-weight: 800;
+  }
+  .pg-grid thead th span {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .pg-grid thead th small {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pg-grid th.sun b,
+  .pg-grid th.sun span,
+  .pg-grid th.sun small {
+    color: var(--pg-red);
+  }
+  .pg-grid th.st {
+    background: var(--pg-yel);
+  }
+  .pg-grid th.bb {
+    box-shadow: inset 0 3px var(--pg-red);
+  }
+  .pg-grid th.bb::after {
+    content: "хлібол.";
+    display: block;
+    margin-top: 2px;
+    color: var(--pg-red);
+    font-size: 9px;
+    font-weight: 800;
+  }
+  .pg-grid td.bb {
+    background: var(--pg-rt);
+  }
+  .pg-grid th.next {
+    box-shadow: inset 0 -3px #ff4a1c;
+  }
+  .pg-grid th.bb.next {
+    box-shadow:
+      inset 0 3px var(--pg-red),
+      inset 0 -3px #ff4a1c;
+  }
+  .pg-grid .pg-nm {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    min-width: 170px;
+    padding: 0 14px;
+    background: var(--pg-bg);
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .pg-grid thead .pg-nm {
+    z-index: 3;
+    font-size: 16px;
+    font-weight: 800;
+    vertical-align: middle;
+  }
+  .pg-grid .pg-nm small {
+    display: inline-block;
+    width: 18px;
+    margin-right: 6px;
+    color: var(--pg-mut);
+    font-weight: 500;
+  }
+  .pg-grid td.study {
+    background: var(--pg-yt);
+    vertical-align: middle;
+  }
+  .pg-grid td.study span {
+    color: var(--pg-yink);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+  .pg-grid tr.me > * {
+    background: var(--pg-me) !important;
+  }
+  .pg-grid tr.me .pg-nm {
+    color: #ff4a1c;
+  }
+  .pg-dim tbody tr:not(.me) .pg-n {
+    opacity: 0.35;
+  }
+  .pg-n {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .pg-n1 {
+    background: #2f7de1;
+    color: #fff;
+  }
+  .pg-n2 {
+    background: #24c56c;
+    color: #06301a;
+  }
+  .pg-n3 {
+    background: #f0592b;
+    color: #fff;
+  }
+  .pg-n4 {
+    background: #e9a215;
+    color: #2b1c00;
+  }
+  .pg-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 20px;
+    margin: 14px 2px 0;
+    color: var(--pg-mut);
+    font-size: 13px;
+  }
+  .pg-legend .pg-n {
+    width: 22px;
+    height: 22px;
+    margin-right: 6px;
+    font-size: 12px;
+  }
+  .pg-sw {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    margin-right: 6px;
+    border-radius: 6px;
+    vertical-align: middle;
+  }
+  .pg-sw.bb {
+    background: var(--pg-rt);
+    box-shadow: inset 0 3px var(--pg-red);
+  }
+  .pg-sw.st {
+    background: var(--pg-yel);
+  }
+  .pg-red {
+    color: var(--pg-red);
+    font-weight: 700;
+  }
+
+  /* підказка */
+  .pg-tip {
+    position: fixed;
+    z-index: 50;
+    max-width: 260px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #10152d;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.4;
+    box-shadow: 0 8px 24px #0004;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(4px);
+    transition:
+      opacity 0.12s,
+      transform 0.12s;
+  }
+  .pg-tip.on {
+    opacity: 1;
+    transform: none;
+  }
+  .pg-tip b {
+    display: block;
+    font-size: 15px;
+  }
+  .pg-tip .d {
+    display: block;
+    color: #9fe8bf;
+    font-weight: 700;
+  }
+  .pg-tip .r {
+    display: block;
+    color: #ff8a8a;
+    font-weight: 800;
+  }
+  .pg-tip ol {
+    margin: 4px 0 0;
+    padding-left: 18px;
+  }
+
+  /* по датах */
+  .pg-days {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 12px;
+  }
+  .pg-svc {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 14px;
+    padding: 14px;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    background: var(--pg-card);
+  }
+  .pg-dd {
+    padding: 8px 0;
+    border-radius: 12px;
+    background: var(--pg-bg);
+    text-align: center;
+  }
+  .pg-dd b {
+    display: block;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.05;
+  }
+  .pg-dd span {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .pg-svc.sun .pg-dd b,
+  .pg-svc.sun .pg-dd span {
+    color: var(--pg-red);
+  }
+  .pg-svc.st {
+    background: var(--pg-yt);
+  }
+  .pg-svc.bb {
+    border-color: color-mix(in srgb, var(--pg-red) 30%, transparent);
+    background: var(--pg-rt);
+  }
+  .pg-svc.next {
+    border-color: #ff4a1c;
+  }
+  .pg-svc.mine {
+    border-color: #2f7de1;
+  }
+  .pg-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+    color: var(--pg-mut);
+    font-size: 13px;
+  }
+  .pg-meta em {
+    padding: 1px 8px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+  }
+  .pg-meta .bbt {
+    background: var(--pg-red);
+    color: #fff;
+  }
+  .pg-meta .nx {
+    background: #ff4a1c;
+    color: #fff;
+  }
+  .pg-svc ol {
+    display: grid;
+    gap: 6px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pg-svc li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+  }
+  .pg-svc li .pg-n {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+  .pg-svc li.me {
+    color: #ff4a1c;
+  }
+  .pg-st {
+    margin-top: 8px;
+    color: var(--pg-yink);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+  }
+  .pg-em {
+    margin-top: 8px;
+    color: var(--pg-mut);
+    font-size: 14px;
+  }
+
+  /* проповідники за рік */
+  .pg-ppl .pg-open {
+    cursor: pointer;
+  }
+  .pg-ppl .pg-open:hover {
+    color: #ff4a1c;
+  }
+  .pg-mn {
+    font-size: 14px !important;
+  }
+  .pg-ppl th.cur b {
+    color: #ff4a1c;
+  }
+  .pg-ppl td.pg-m {
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .pg-ppl td.pg-m i {
+    display: block;
+    height: 4px;
+    margin: 2px auto 0;
+    border-radius: 2px;
+    background: #2f7de1;
+  }
+  .pg-ppl td.pg-z {
+    color: var(--pg-line);
+  }
+  .pg-ppl .pg-tot {
+    color: var(--pg-mut);
+    font-weight: 700;
+  }
+  .pg-det td {
+    height: auto;
+    padding: 10px 14px;
+    background: var(--pg-card);
+    text-align: left;
+  }
+  .pg-lst {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .pg-lst span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 4px;
+    border-radius: 99px;
+    background: var(--pg-bg);
+    font-size: 13px;
+  }
+  .pg-lst .pg-n {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+
+
+  /* адмінка */
+  .pg-who {
+    white-space: nowrap;
+  }
+  .pg-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--pg-ink);
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .pg-edit td[data-p] {
+    cursor: pointer;
+  }
+  .pg-edit td[data-p]:hover {
+    outline: 2px solid #2f7de1;
+    outline-offset: -2px;
+  }
+  .pg-edit thead th[data-c] {
+    cursor: pointer;
+  }
+  .pg-grid td.dup {
+    background: color-mix(in srgb, #f0592b 22%, var(--pg-bg)) !important;
+  }
+  .pg-panel {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 16px;
+    background: var(--pg-card);
+  }
+  .pg-panel h2,
+  .pg-login h2 {
+    margin: 0 0 10px;
+    font-size: 19px;
+    font-weight: 800;
+  }
+  .pg-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .pg-mt {
+    margin-top: 10px;
+  }
+  .pg-inp {
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--pg-line);
+    border-radius: 10px;
+    background-color: var(--pg-bg);
+    color: var(--pg-ink);
+    font: inherit;
+    font-size: 16px;
+  }
+  select.pg-inp {
+    padding-right: 36px;
+    background-image:
+      linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position:
+      calc(100% - 19px) 52%,
+      calc(100% - 14px) 52%;
+    background-size:
+      5px 5px,
+      5px 5px;
+    background-repeat: no-repeat;
+    appearance: none;
+  }
+  .pg-inp:focus-visible {
+    outline: none;
+    border-color: color-mix(in srgb, currentColor 55%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 14%, transparent);
+  }
+  .pg-grow {
+    flex: 1;
+    min-width: 200px;
+  }
+  .pg-full {
+    width: 100%;
+  }
+  .pg-b {
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--pg-line);
+    border-radius: 10px;
+    background: var(--pg-bg);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .pg-b.pr {
+    border-color: #10152d;
+    background: #10152d;
+    color: #fff;
+  }
+  .pg[data-mode="dark"] .pg-b.pr {
+    border-color: #eef1f8;
+    background: #eef1f8;
+    color: #10152d;
+  }
+  .pg-b.dg {
+    color: #e0412a;
+  }
+  .pg-b.sm {
+    height: 36px;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+  .pg-hint {
+    margin: 8px 0 0;
+    color: var(--pg-mut);
+    font-size: 13px;
+  }
+  .pg-plist {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .pg-it {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 12px;
+    background: var(--pg-bg);
+  }
+  .pg-it .ix {
+    color: var(--pg-mut);
+    font-size: 13px;
+    text-align: center;
+  }
+  .pg-it input[type="text"] {
+    width: 100%;
+    height: 40px;
+    border: 0;
+    background: none;
+    color: var(--pg-ink);
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .pg-it.off input[type="text"] {
+    color: var(--pg-mut);
+    text-decoration: line-through;
+  }
+  .pg-it .act {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .pg-it label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 6px;
+    color: var(--pg-mut);
+    font-size: 13px;
+  }
+  .pg-it input[type="checkbox"] {
+    accent-color: var(--pg-ink);
+  }
+  .pg-askrow {
+    grid-column: 1 / -1;
+  }
+  .pg-askrow:empty {
+    display: none;
+  }
+  .pg-login {
+    display: grid;
+    gap: 12px;
+    max-width: 380px;
+    margin: 8px auto 24px;
+    padding: 24px;
+    border-radius: 18px;
+    background: var(--pg-card);
+  }
+  .pg-login label {
+    display: grid;
+    gap: 4px;
+    color: var(--pg-mut);
+    font-size: 14px;
+  }
+  .pg-pop {
+    position: fixed;
+    z-index: 60;
+    display: none;
+    width: min(300px, calc(100vw - 24px));
+    padding: 12px;
+    border: 1px solid var(--pg-line);
+    border-radius: 14px;
+    background: var(--pg-bg);
+    color: var(--pg-ink);
+    box-shadow: 0 12px 32px #0003;
+  }
+  .pg-pop.on {
+    display: block;
+  }
+  .pg-pop h3 {
+    margin: 0 0 2px;
+    font-size: 15px;
+  }
+  .pg-pop .s {
+    margin-bottom: 10px;
+    color: var(--pg-mut);
+    font-size: 13px;
+  }
+  .pg-pop .nums {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  .pg-pop .nums button {
+    height: 44px;
+    border: 1px solid var(--pg-line);
+    border-radius: 10px;
+    background: var(--pg-card);
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .pg-pop .nums button.on {
+    border-color: #2f7de1;
+    background: #2f7de1;
+    color: #fff;
+  }
+  .pg-pop .f {
+    display: grid;
+    gap: 8px;
+  }
+  .pg-pop label {
+    display: grid;
+    gap: 2px;
+    color: var(--pg-mut);
+    font-size: 13px;
+  }
+  .pg-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    z-index: 70;
+    display: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: #10152d;
+    color: #fff;
+    font-size: 14px;
+    transform: translateX(-50%);
+  }
+  .pg-toast.on {
+    display: block;
+  }
+
+  @media (max-width: 700px) {
+    .pg {
+      padding: 14px;
+      border-radius: 18px;
+    }
+    .pg-title {
+      padding-right: 56px;
+    }
+    .pg-nav {
+      width: 100%;
+    }
+    .pg-theme {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+    }
+    .pg-nav .pg-sel {
+      flex: 1;
+      padding: 0 30px 0 10px;
+      background-position:
+        calc(100% - 17px) 52%,
+        calc(100% - 12px) 52%;
+    }
+    .pg-month {
+      min-width: 0;
+      flex: 1.6 !important;
+    }
+    .pg-tabs {
+      width: 100%;
+      overflow-x: auto;
+    }
+    .pg-tabs button {
+      flex: 1 0 auto;
+      padding: 0 10px;
+      font-size: 13px;
+    }
+    .pg-find {
+      width: 100%;
+      margin-left: 0;
+    }
+    .pg-find .pg-sel {
+      flex: 1;
+      max-width: none;
+    }
+    .pg-wrap {
+      max-height: none;
+    }
+    .pg-grid .pg-nm {
+      min-width: 128px;
+      padding: 0 8px;
+      font-size: 13px;
+    }
+    .pg-grid .pg-nm small {
+      display: none;
+    }
+    .pg-grid th,
+    .pg-grid td {
+      min-width: 40px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pg *,
+    .pg-tip {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  import { initPreacherSchedule } from "../../utils/preacherSchedule.mjs";
+
+  const root = document.getElementById("pg");
+  if (root) initPreacherSchedule(root);
+</script>

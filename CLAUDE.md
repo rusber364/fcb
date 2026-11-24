@@ -46,9 +46,10 @@ Routes and what each fetches:
 | `/news` | `news.astro` | `getPosts()` |
 | `/post/[slug]` | `post/[slug].astro` | `getPost()`; `Astro.rewrite('/404')` when the doc is missing |
 | `/calendar` | `calendar.astro` | `getEvents()` server-side → `toCalendarEvents()` (`utils/calendarEvents.ts`, Kyiv dates, stega-cleaned), serialized into `data-events` |
-| `/grafik` | `grafik.astro` | `getPreachers()` server-side; the schedule itself is fetched in the browser |
+| `/grafik` | `grafik.astro` → `components/grafik/Grafik.astro` | **not Sanity**: Supabase, fetched in the browser (`utils/grafikApi.mjs`) |
+| `/grafik/admin` | `grafik/admin.astro` → same component with `admin` | Supabase email/password login; writes allowed only for users in `grafik_admins` (RLS) |
 
-The exception to the `sanity.ts` rule is `utils/preacherSchedule.mjs`, which queries `sanity:client` from the **browser** because the schedule re-fetches when the user changes month/year. It bypasses `loadQuery`, so none of the perspective / token / stega switching above applies to that query.
+The preacher schedule (`/grafik`, `/grafik/admin`) does not use Sanity at all. `utils/preacherSchedule.mjs` renders the table, the per-date cards, the yearly stats and the admin editor; `utils/grafikApi.mjs` talks to Supabase over plain REST (no SDK). Tables: `grafik_preachers`, `grafik_months` (`key` = `YYYY-MM`, `services` jsonb, `a` jsonb = `{serviceId: {preacherId: slot}}`), `grafik_settings` (note + weekly template), `grafik_admins` (who may edit). The publishable key is public by design; override URL/key with `PUBLIC_SUPABASE_URL` / `PUBLIC_SUPABASE_ANON_KEY`. The Sanity `preacher`/`monthlySchedule` types are now unused by the site.
 
 **Stega hygiene.** With visual editing on, every string returned by Sanity carries invisible stega characters. Harmless inside text nodes, breaking inside URLs and attributes — hence `stegaClean(post.slug.current)` in `News.astro` and `news.astro`. Wrap any Sanity string used to build an `href`, `src`, id, or query param.
 
@@ -78,7 +79,7 @@ Git history has been steadily moving sections out of (1) into (2) or (3), one se
 
 **Event calendar.** `/calendar` is an Apple-Calendar-style app (`components/calendar/EventCalendar.astro` + `utils/eventCalendar.mjs`): year/month/day/list views with pinch/trackpad zoom, categories, search, light/dark theme. Its CSS (`EventCalendar.css`) is scoped under the `.cc` root so it can't leak into the site. Category colors live in `CATEGORIES` in `eventCalendar.mjs` and must match the `category` list in `studio/src/schemaTypes/documents/event.ts`. Repeats (`repeat`/`repeatUntil`) are expanded in the browser, so one document = one series.
 
-**Week start.** The calendar grid is Monday-first (`DAYS_UK_SHORT` starts at "Пн", leading offset is `(getDay() + 6) % 7`); the preacher table is Sunday-first (`DAY_NAMES` starts at "Нд", indexed by raw `getDay()`). Don't move a day-index helper between them. `/grafik` also renders only "preaching days" — `PREACHING_DAYS = [0, 3, 5, 6]`, i.e. Sun/Wed/Fri/Sat — not every day of the month.
+**Week start.** The calendar grid is Monday-first (`DAYS_UK_SHORT` starts at "Пн", leading offset is `(getDay() + 6) % 7`); the preacher table is Sunday-first (`DAY_NAMES` starts at "Нд", indexed by raw `getDay()`). Don't move a day-index helper between them. `/grafik` renders only the month's services: the saved list from `grafik_months`, or the weekly template from `grafik_settings` (Wed 10:00, Sat 17:00 "Розбір Слова", Sun 11:00) when the month isn't saved yet. The first Sunday is bread-breaking (хліболамання) unless a service sets `bb`.
 
 `MONTHS_UK` exists in three places: exported from `calendar.mjs` (`/grafik` imports it for its `<select>`), a private copy at the bottom of `preacherSchedule.mjs`, and again in `studio/src/schemaTypes/documents/monthlySchedule.ts` (the Studio can't import from the frontend). Change all three together.
 
