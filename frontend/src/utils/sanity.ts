@@ -81,8 +81,13 @@ export async function getEvents(): Promise<Event[]> {
       date,
       endDate,
       time,
+      endTime,
       location,
       category,
+      color,
+      highlightDay,
+      repeat,
+      repeatUntil,
       description,
     }`,
   );
@@ -96,8 +101,16 @@ export interface Event {
   date: string;
   endDate?: string;
   time?: string;
+  endTime?: string;
   location?: string;
-  category?: "sunday" | "youth" | "other";
+  /** Значення з options.list схеми event; кольори — CATEGORIES у utils/eventCalendar.mjs */
+  category?: string;
+  /** Свій колір події (#RRGGBB) замість кольору категорії */
+  color?: string;
+  highlightDay?: boolean;
+  repeat?: "none" | "weekly" | "biweekly" | "monthly" | "yearly";
+  /** YYYY-MM-DD */
+  repeatUntil?: string;
   description?: string;
 }
 

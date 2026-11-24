@@ -1,0 +1,54 @@
+---
+/**
+ * Календар подій у стилі Apple Calendar. Порожня розмітка + події в data-events;
+ * логіку підключає calendar.astro через initEventCalendar (utils/eventCalendar.mjs).
+ */
+import "./EventCalendar.css";
+import type { CalendarEvent } from "@/utils/calendarEvents";
+
+interface Props {
+  events: CalendarEvent[];
+}
+
+const { events } = Astro.props;
+---
+
+<section class="cc" id="event-calendar" data-events={JSON.stringify(events)} data-default-theme="light" aria-label="Календар подій">
+  <header class="nav">
+    <div class="nav-left">
+      <button class="back" type="button" hidden><span data-icon="chevL"></span><span class="back-label"></span></button>
+      <div class="brand">
+        <img class="brand-logo" src="/img/logo.png" alt="" width="67" height="75" />
+        <div class="brand-txt"><b class="brand-title">Календар подій</b><small>Перша баптистська церква</small></div>
+      </div>
+    </div>
+    <div class="nav-center">
+      <div class="seg seg-views wide-only">
+        <button type="button" data-v="day">День</button>
+        <button type="button" data-v="month">Місяць</button>
+        <button type="button" data-v="year">Рік</button>
+        <button type="button" data-v="list">Список</button>
+      </div>
+      <div class="nav-title narrow-only"></div>
+    </div>
+    <div class="nav-right">
+      <button class="text-btn wide-only" type="button" data-act="today">Сьогодні</button>
+      <button class="icon-btn wide-only" type="button" data-act="cats" aria-label="Категорії" data-icon="layers"></button>
+      <button class="icon-btn" type="button" data-act="search" aria-label="Пошук" data-icon="search"></button>
+      <button class="icon-btn" type="button" data-act="theme" aria-label="Змінити тему"></button>
+    </div>
+  </header>
+  <div class="searchbar">
+    <label class="search-field">
+      <span data-icon="search"></span>
+      <input class="search-input" type="search" placeholder="Пошук подій" autocomplete="off" />
+    </label>
+    <button class="text-btn" type="button" data-act="search-cancel">Скасувати</button>
+  </div>
+  <div class="cc-stage"><div class="loading"><div class="spinner"></div></div></div>
+  <footer class="toolbar">
+    <button class="tb" type="button" data-act="today">Сьогодні</button>
+    <button class="tb" type="button" data-act="cats">Категорії</button>
+    <button class="tb" type="button" data-act="list">Список</button>
+  </footer>
+</section>

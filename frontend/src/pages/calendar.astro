@@ -1,33 +1,24 @@
 ---
-import { MONTHS_UK } from "@/utils/calendar.mjs";
-import CalendarControls from "../components/calendar/CalendarControls.astro";
-import CalendarGrid from "../components/calendar/CalendarGrid.astro";
 import CalendarInfoBar from "../components/calendar/CalendarInfoBar.astro";
+import EventCalendar from "../components/calendar/EventCalendar.astro";
 import Layout from "../layouts/Layout.astro";
+import { toCalendarEvents } from "../utils/calendarEvents";
 import { getEvents } from "../utils/sanity";
 
-const events = await getEvents();
-const today = new Date();
-const currentYear = today.getFullYear();
-const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
+const events = toCalendarEvents(await getEvents());
 ---
 
-<Layout title="Календар подій">
-  <div class="container font-serif pt-7 pb-20 max-md:pt-4">
-    <CalendarControls months={MONTHS_UK} years={years} currentYear={currentYear} currentMonth={today.getMonth()} />
-    <CalendarGrid events={events} />
+<Layout title="Календар подій" description="Розклад служінь, зібрань і подій Першої баптистської церкви Черкас">
+  <div class="container pt-7 pb-20 max-md:pt-4 max-md:pb-12">
+    <h1 class="visually-hidden">Календар подій</h1>
+    <EventCalendar events={events} />
     <CalendarInfoBar />
   </div>
 </Layout>
 
 <script>
-  import { initCalendar } from "../utils/calendar.mjs";
+  import { initEventCalendar } from "../utils/eventCalendar.mjs";
 
-  const container = document.getElementById("calendar-grid")!;
-  const titleEl = document.getElementById("calendar-title")!;
-  const monthSelect = document.getElementById("calendar-month-select")!;
-  const yearSelect = document.getElementById("calendar-year-select")!;
-  const events = JSON.parse(container.dataset.events!);
-
-  initCalendar(container, titleEl, monthSelect, yearSelect, events);
+  const root = document.getElementById("event-calendar");
+  if (root) initEventCalendar(root, JSON.parse(root.dataset.events || "[]"));
 </script>

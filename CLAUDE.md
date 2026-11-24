@@ -45,7 +45,7 @@ Routes and what each fetches:
 | `/` | `index.astro` | static sections; `News.astro` takes the 6 newest posts |
 | `/news` | `news.astro` | `getPosts()` |
 | `/post/[slug]` | `post/[slug].astro` | `getPost()`; `Astro.rewrite('/404')` when the doc is missing |
-| `/calendar` | `calendar.astro` | `getEvents()` server-side, serialized into `data-events` |
+| `/calendar` | `calendar.astro` | `getEvents()` server-side → `toCalendarEvents()` (`utils/calendarEvents.ts`, Kyiv dates, stega-cleaned), serialized into `data-events` |
 | `/grafik` | `grafik.astro` | `getPreachers()` server-side; the schedule itself is fetched in the browser |
 
 The exception to the `sanity.ts` rule is `utils/preacherSchedule.mjs`, which queries `sanity:client` from the **browser** because the schedule re-fetches when the user changes month/year. It bypasses `loadQuery`, so none of the perspective / token / stega switching above applies to that query.
@@ -56,7 +56,7 @@ The exception to the `sanity.ts` rule is `utils/preacherSchedule.mjs`, which que
 
 - Pages in `src/pages`, `.astro` components in `src/components` (calendar sub-components under `components/calendar/`).
 - **Interactive logic is plain `.mjs` in `src/utils`, not framework components.** Two shapes, both in use:
-  - the `.astro` file renders empty markup with ids and `data-*` attributes holding JSON, then a `<script>` block imports an `init*` function and wires it to those DOM nodes (`calendar.astro` → `calendar.mjs`, `grafik.astro` → `preacherSchedule.mjs`, `Hero.astro` → `initHeroSlider.mjs` + `initMobileContentSliders.mjs`);
+  - the `.astro` file renders empty markup with ids and `data-*` attributes holding JSON, then a `<script>` block imports an `init*` function and wires it to those DOM nodes (`calendar.astro` → `eventCalendar.mjs`, `grafik.astro` → `preacherSchedule.mjs`, `Hero.astro` → `initHeroSlider.mjs` + `initMobileContentSliders.mjs`);
   - side-effect modules that find their own DOM and run on import (`initHeaderBehavior.mjs`, `icon.mjs`, both imported from `Layout.astro`).
 
   Follow this instead of adding React islands.
@@ -76,9 +76,11 @@ Git history has been steadily moving sections out of (1) into (2) or (3), one se
 
 **Month indexing.** Sanity's `monthlySchedule.month` is 1–12; JS `Date` months are 0–11. `preacherSchedule.mjs` passes `month + 1` into its query, `getMonthlySchedule()` expects the 1-based value, and the schema's `prepare` uses `MONTHS_UK[month - 1]`. Check which convention you're in before touching schedule code.
 
+**Event calendar.** `/calendar` is an Apple-Calendar-style app (`components/calendar/EventCalendar.astro` + `utils/eventCalendar.mjs`): year/month/day/list views with pinch/trackpad zoom, categories, search, light/dark theme. Its CSS (`EventCalendar.css`) is scoped under the `.cc` root so it can't leak into the site. Category colors live in `CATEGORIES` in `eventCalendar.mjs` and must match the `category` list in `studio/src/schemaTypes/documents/event.ts`. Repeats (`repeat`/`repeatUntil`) are expanded in the browser, so one document = one series.
+
 **Week start.** The calendar grid is Monday-first (`DAYS_UK_SHORT` starts at "Пн", leading offset is `(getDay() + 6) % 7`); the preacher table is Sunday-first (`DAY_NAMES` starts at "Нд", indexed by raw `getDay()`). Don't move a day-index helper between them. `/grafik` also renders only "preaching days" — `PREACHING_DAYS = [0, 3, 5, 6]`, i.e. Sun/Wed/Fri/Sat — not every day of the month.
 
-`MONTHS_UK` exists in three places: exported from `calendar.mjs` (both pages import it for their `<select>`), a private copy at the bottom of `preacherSchedule.mjs`, and again in `studio/src/schemaTypes/documents/monthlySchedule.ts` (the Studio can't import from the frontend). Change all three together.
+`MONTHS_UK` exists in three places: exported from `calendar.mjs` (`/grafik` imports it for its `<select>`), a private copy at the bottom of `preacherSchedule.mjs`, and again in `studio/src/schemaTypes/documents/monthlySchedule.ts` (the Studio can't import from the frontend). Change all three together.
 
 ## Studio
 
