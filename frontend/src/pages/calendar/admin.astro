@@ -1,0 +1,18 @@
+---
+import CalendarAdmin from "../../components/calendar/CalendarAdmin.astro";
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Календар подій — адмінка">
+  <div class="container pt-7 pb-20 max-md:pt-4">
+    <h1 class="visually-hidden">Адмінка календаря подій</h1>
+    <CalendarAdmin />
+  </div>
+</Layout>
+
+<script>
+  import { initCalendarAdmin } from "../../utils/calendarAdmin.mjs";
+
+  const root = document.getElementById("calendar-admin");
+  if (root) initCalendarAdmin(root);
+</script>

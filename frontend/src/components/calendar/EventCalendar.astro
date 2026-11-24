@@ -1,19 +1,12 @@
 ---
 /**
- * Календар подій у стилі Apple Calendar. Порожня розмітка + події в data-events;
- * логіку підключає calendar.astro через initEventCalendar (utils/eventCalendar.mjs).
+ * Календар подій у стилі Apple Calendar. Порожня розмітка; події з Supabase
+ * завантажує initEventCalendar (utils/eventCalendar.mjs), який підключає calendar.astro.
  */
 import "./EventCalendar.css";
-import type { CalendarEvent } from "@/utils/calendarEvents";
-
-interface Props {
-  events: CalendarEvent[];
-}
-
-const { events } = Astro.props;
 ---
 
-<section class="cc" id="event-calendar" data-events={JSON.stringify(events)} data-default-theme="light" aria-label="Календар подій">
+<section class="cc" id="event-calendar" data-default-theme="light" aria-label="Календар подій">
   <header class="nav">
     <div class="nav-left">
       <button class="back" type="button" hidden><span data-icon="chevL"></span><span class="back-label"></span></button>

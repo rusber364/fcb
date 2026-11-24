@@ -45,7 +45,8 @@ Routes and what each fetches:
 | `/` | `index.astro` | static sections; `News.astro` takes the 6 newest posts |
 | `/news` | `news.astro` | `getPosts()` |
 | `/post/[slug]` | `post/[slug].astro` | `getPost()`; `Astro.rewrite('/404')` when the doc is missing |
-| `/calendar` | `calendar.astro` | `getEvents()` server-side → `toCalendarEvents()` (`utils/calendarEvents.ts`, Kyiv dates, stega-cleaned), serialized into `data-events` |
+| `/calendar` | `calendar.astro` → `components/calendar/EventCalendar.astro` | **not Sanity**: Supabase, fetched in the browser (`utils/calendarApi.mjs`) |
+| `/calendar/admin` | `calendar/admin.astro` → `components/calendar/CalendarAdmin.astro` | Supabase email/password login (same session as `/grafik/admin`); writes allowed only for users in `cal_admins` (RLS) |
 | `/grafik` | `grafik.astro` → `components/grafik/Grafik.astro` | **not Sanity**: Supabase, fetched in the browser (`utils/grafikApi.mjs`) |
 | `/grafik/admin` | `grafik/admin.astro` → same component with `admin` | Supabase email/password login; writes allowed only for users in `grafik_admins` (RLS) |
 
@@ -77,7 +78,7 @@ Git history has been steadily moving sections out of (1) into (2) or (3), one se
 
 **Month indexing.** Sanity's `monthlySchedule.month` is 1–12; JS `Date` months are 0–11. `preacherSchedule.mjs` passes `month + 1` into its query, `getMonthlySchedule()` expects the 1-based value, and the schema's `prepare` uses `MONTHS_UK[month - 1]`. Check which convention you're in before touching schedule code.
 
-**Event calendar.** `/calendar` is an Apple-Calendar-style app (`components/calendar/EventCalendar.astro` + `utils/eventCalendar.mjs`): year/month/day/list views with pinch/trackpad zoom, categories, search, light/dark theme. Its CSS (`EventCalendar.css`) is scoped under the `.cc` root so it can't leak into the site. Category colors live in `CATEGORIES` in `eventCalendar.mjs` and must match the `category` list in `studio/src/schemaTypes/documents/event.ts`. Repeats (`repeat`/`repeatUntil`) are expanded in the browser, so one document = one series.
+**Event calendar.** `/calendar` is an Apple-Calendar-style app (`components/calendar/EventCalendar.astro` + `utils/eventCalendar.mjs`): year/month/day/list views with pinch/trackpad zoom, categories, search, light/dark theme. `/calendar/admin` (`utils/calendarAdmin.mjs`) edits events and categories. Data is Supabase, like `/grafik`: `cal_categories` (name, color), `cal_events` (date/end_date, start/end time, `repeat` + `repeat_until`, `exdates` = days removed from a series, `color`, `tint_day`), `cal_admins`. Repeats are expanded in the browser, so one row = one series. Both CSS files (`EventCalendar.css`, `CalendarAdmin.css`) are scoped under the `.cc` root so they can't leak into the site. The Sanity `event` type is now unused by the site.
 
 **Week start.** The calendar grid is Monday-first (`DAYS_UK_SHORT` starts at "Пн", leading offset is `(getDay() + 6) % 7`); the preacher table is Sunday-first (`DAY_NAMES` starts at "Нд", indexed by raw `getDay()`). Don't move a day-index helper between them. `/grafik` renders only the month's services: the saved list from `grafik_months`, or the weekly template from `grafik_settings` (Wed 10:00, Sat 17:00 "Розбір Слова", Sun 11:00) when the month isn't saved yet. The first Sunday is bread-breaking (хліболамання) unless a service sets `bb`.
 

@@ -2,16 +2,12 @@
 import CalendarInfoBar from "../components/calendar/CalendarInfoBar.astro";
 import EventCalendar from "../components/calendar/EventCalendar.astro";
 import Layout from "../layouts/Layout.astro";
-import { toCalendarEvents } from "../utils/calendarEvents";
-import { getEvents } from "../utils/sanity";
-
-const events = toCalendarEvents(await getEvents());
 ---
 
 <Layout title="Календар подій" description="Розклад служінь, зібрань і подій Першої баптистської церкви Черкас">
   <div class="container pt-7 pb-20 max-md:pt-4 max-md:pb-12">
     <h1 class="visually-hidden">Календар подій</h1>
-    <EventCalendar events={events} />
+    <EventCalendar />
     <CalendarInfoBar />
   </div>
 </Layout>
@@ -20,5 +16,5 @@ const events = toCalendarEvents(await getEvents());
   import { initEventCalendar } from "../utils/eventCalendar.mjs";
 
   const root = document.getElementById("event-calendar");
-  if (root) initEventCalendar(root, JSON.parse(root.dataset.events || "[]"));
+  if (root) initEventCalendar(root);
 </script>
